@@ -1,0 +1,32 @@
+services:
+    hackathon-dwi-db:
+        image: mysql:8.0
+        container_name: hackathon-dwi-db
+        environment:
+            MYSQL_ROOT_PASSWORD: dwipassword
+            MYSQL_DATABASE: dwidb
+            MYSQL_USER: dwiuser
+            MYSQL_PASSWORD: dwipassword
+        networks:
+            - hackathon-dwi-network
+        volumes:
+            - hackathon-dwi-db-data:/var/lib/mysql
+
+    hackathon-dwi:
+        image: "hackathon-dwi-user:0.0.1-SNAPSHOT"
+        container_name: hackathon-dwi-user
+        networks:
+            - hackathon-dwi-network
+        depends_on:
+            - hackathon-dwi-gateway
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:mysql://hackathon-dwi-db:3306/dwidb
+            - SPRING_DATASOURCE_USERNAME=dwiuser
+            - SPRING_DATASOURCE_PASSWORD=dwipassword
+
+volumes:
+    hackathon-dwi-db-data:
+
+networks:
+    hackathon-dwi-network:
+        driver: bridge

@@ -1,0 +1,74 @@
+# Application
+spring:
+  application:
+    name: hackathon-dwi
+
+  mvc:
+    view:
+      suffix: .xhtml
+
+  api:
+    version: v0
+
+  profiles:
+    active:
+      - dev
+
+  output:
+    ansi:
+      enabled: always
+
+  jpa:
+    open-in-view: false
+
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+
+# Security
+security:
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - OPTIONS
+
+  allowed-headers:
+    - Authorization
+    - Origin
+    - Content-Type
+    - Accept
+    - Accept-Encoding
+    - Accept-Language
+
+  allowed-public-routes:
+    # Ui
+    - /
+    - /index.xhtml
+    - /login
+    - /login.xhtml
+    - /register
+    - /register.xhtml
+    - /favicon.ico
+    - /health
+    - /health.xhtml
+    - /assets/**
+    # Api
+    - /api/${spring.api.version}/auth/**
+    # Swagger
+    - /api/${spring.api.version}/docs
+    - /api/${spring.api.version}/swagger-ui*/**
+    - /v3/api-docs*/**
+
+  jwt:
+    secret: dmFtb3MgYSBnYW5hYWFhYWFhYWFhYWFhYWFhYWFhYXI=
+
+# Swagger
+springdoc:
+  swagger-ui:
+    path: /api/${spring.api.version}/docs
+    operations-sorter: method
+    tagsSorter: alpha

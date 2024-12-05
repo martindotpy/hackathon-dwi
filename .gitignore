@@ -1,0 +1,46 @@
+# Env
+.env
+
+# Java
+target
+target_test-classes
+*.class
+*.jar
+*.war
+
+# Build
+build/
+dist/
+
+# VS Code
+.vscode/settings.json
+.vscode/tasks.json
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Logs
+logs
+*.log
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
