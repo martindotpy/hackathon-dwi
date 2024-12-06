@@ -3,6 +3,7 @@ services:
         image: mysql:8.0
         container_name: hackathon-dwi-db
         environment:
+            TZ: America/Lima
             MYSQL_ROOT_PASSWORD: dwipassword
             MYSQL_DATABASE: dwidb
             MYSQL_USER: dwiuser
@@ -13,16 +14,21 @@ services:
             - hackathon-dwi-db-data:/var/lib/mysql
 
     hackathon-dwi:
-        image: "hackathon-dwi-user:0.0.1-SNAPSHOT"
-        container_name: hackathon-dwi-user
+        image: "hackathon-dwi:0.0.1-SNAPSHOT"
+        container_name: hackathon-dwi
+        ports:
+            - "8082:8080"
+        depends_on:
+            - hackathon-dwi-db
         networks:
             - hackathon-dwi-network
-        depends_on:
-            - hackathon-dwi-gateway
         environment:
-            - SPRING_DATASOURCE_URL=jdbc:mysql://hackathon-dwi-db:3306/dwidb
-            - SPRING_DATASOURCE_USERNAME=dwiuser
-            - SPRING_DATASOURCE_PASSWORD=dwipassword
+            TZ: America/Lima
+            SPRING_DATASOURCE_URL: jdbc:mysql://hackathon-dwi-db:3306/dwidb
+            SPRING_DATASOURCE_USERNAME: dwiuser
+            SPRING_DATASOURCE_PASSWORD: dwipassword
+            SPRING_PROFILES_ACTIVE: prod
+        restart: on-failure
 
 volumes:
     hackathon-dwi-db-data:
