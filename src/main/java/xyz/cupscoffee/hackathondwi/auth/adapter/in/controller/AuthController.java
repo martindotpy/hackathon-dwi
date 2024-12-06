@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.LoginRequest;
@@ -41,7 +40,7 @@ public final class AuthController {
     })
     @SecurityRequirements
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         var violations = request.validate();
 
         if (!violations.isEmpty()) {
@@ -65,7 +64,7 @@ public final class AuthController {
     })
     @SecurityRequirements
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         var violations = request.validate();
 
         if (!violations.isEmpty()) {
