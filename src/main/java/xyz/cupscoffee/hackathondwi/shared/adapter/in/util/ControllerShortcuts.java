@@ -127,23 +127,37 @@ public final class ControllerShortcuts {
      * @param <R>                      the type of the paginated content response.
      * @param paginatedContentResponse the paginated content response class.
      * @param paginated                the paginated content.
-     * @param message                  the message.
+     * @param code                     the code of the message.
+     * @param defaultMessage           the default message.
      * @return the response
      */
     public static <T, P extends Paginated<T>, R extends PaginatedResponse<T>> ResponseEntity<?> toPaginatedResponse(
             Class<R> paginatedContentResponse,
-            P paginated, String message) {
-        return toPaginatedResponse(paginated, message);
+            P paginated, String code, String defaultMessage) {
+        return toPaginatedResponse(paginated, code, defaultMessage);
     }
 
     /**
      * Basic response with a simple message.
      *
-     * @param paginated the paginated content.
-     * @param message   the message.
+     * @param paginated      the paginated content.
+     * @param code           the code of the message.
+     * @param defaultMessage the default message.
      * @return the response
      */
-    public static ResponseEntity<?> toPaginatedResponse(Paginated<?> paginated, String message) {
+    public static ResponseEntity<?> toPaginatedResponse(Paginated<?> paginated, String code, String defaultMessage) {
+        String message = messageSource.getMessage(
+                code,
+                null,
+                null,
+                LocaleContextHolder.getLocale());
+
+        if (message == null) {
+            log.warn("The message code is empty, using the default message `{}`", defaultMessage);
+
+            message = defaultMessage;
+        }
+
         log.info("Creating paginated response with message `{}` with entity `{}`", message,
                 paginated.getContent().getClass().getSimpleName());
 
