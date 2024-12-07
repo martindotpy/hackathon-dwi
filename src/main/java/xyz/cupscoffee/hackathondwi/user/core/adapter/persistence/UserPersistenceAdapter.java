@@ -3,6 +3,7 @@ package xyz.cupscoffee.hackathondwi.user.core.adapter.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import lombok.AllArgsConstructor;
@@ -42,7 +43,7 @@ public final class UserPersistenceAdapter implements UserDetailsService, UserRep
     public Result<User, UserFailure> save(User entity) {
         try {
             return Result.ok(userMapper.toDomain(springUserRepository.save(userMapper.toEntity(entity))));
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException constraintViolationException) {
                 String constraintName = constraintViolationException.getConstraintName();
 

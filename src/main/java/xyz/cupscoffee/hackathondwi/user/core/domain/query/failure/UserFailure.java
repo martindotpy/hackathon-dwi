@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.failure.Failure;
 
+/**
+ * User failure.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum UserFailure implements Failure {
