@@ -7,6 +7,7 @@ import static xyz.cupscoffee.hackathondwi.shared.adapter.in.util.ControllerShort
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,7 @@ import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
 @Tag(name = "Auth", description = "Authentication")
 @Slf4j
 @RestController
+@RequestMapping("/api/${spring.api.version}/auth")
 @RequiredArgsConstructor
 public final class AuthController {
     private final LoginUserPort loginUserPort;

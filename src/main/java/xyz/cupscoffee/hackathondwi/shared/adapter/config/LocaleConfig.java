@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.shared.adapter.bean;
+package xyz.cupscoffee.hackathondwi.shared.adapter.config;
 
 import java.util.Locale;
 

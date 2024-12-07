@@ -1,6 +1,8 @@
 package xyz.cupscoffee.hackathondwi.shared.application.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -8,7 +10,9 @@ import lombok.experimental.SuperBuilder;
  */
 @Getter
 @SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContentResponse<T> {
-    private final String message;
-    private final T content;
+    private String message;
+    private T content;
 }

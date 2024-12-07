@@ -1,8 +1,9 @@
-package xyz.cupscoffee.hackathondwi.shared.adapter.bean;
+package xyz.cupscoffee.hackathondwi.shared.adapter.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,5 +46,12 @@ public class ApplicationConfig {
         messageSource.setDefaultEncoding("UTF-8");
 
         return messageSource;
+    }
+
+    @Bean
+    RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        return restTemplate;
     }
 }

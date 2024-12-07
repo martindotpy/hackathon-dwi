@@ -1,5 +1,7 @@
 package xyz.cupscoffee.hackathondwi.shared.adapter.in.util;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +11,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.status.HttpStatusCodeFailureProvider;
@@ -28,9 +33,11 @@ import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
 @Component
 public final class ControllerShortcuts {
     private static MessageSource messageSource;
+    private static ObjectMapper objectMapper;
 
-    private ControllerShortcuts(MessageSource messageSource) {
+    private ControllerShortcuts(MessageSource messageSource, ObjectMapper objectMapper) {
         ControllerShortcuts.messageSource = messageSource;
+        ControllerShortcuts.objectMapper = objectMapper;
     }
 
     /**
@@ -82,6 +89,8 @@ public final class ControllerShortcuts {
         }
 
         log.info("Creating OK response with message `{}` and body `{}`", code, body.getClass().getSimpleName());
+
+        logBody(body);
 
         return ResponseEntity.ok(
                 ContentResponse.builder()
@@ -224,10 +233,14 @@ public final class ControllerShortcuts {
                 failure.getMessage(),
                 LocaleContextHolder.getLocale());
 
+        var failureResponse = FailureResponse.builder()
+                .message(message)
+                .build();
+
+        logBody(failureResponse);
+
         return ResponseEntity.status(httpStatus)
-                .body(FailureResponse.builder()
-                        .message(message)
-                        .build());
+                .body(failureResponse);
     }
 
     /**
@@ -259,5 +272,14 @@ public final class ControllerShortcuts {
 
     private static String cleanFailureName(String failureName) {
         return failureName.replace("Failure", "").toLowerCase();
+    }
+
+    private static void logBody(Object body) {
+        try {
+            log.debug("Body: `{}`",
+                    ansi().fgYellow().a(objectMapper.writeValueAsString(body)).reset());
+        } catch (JsonProcessingException e) {
+            log.error("Error while serializing body", e);
+        }
     }
 }
