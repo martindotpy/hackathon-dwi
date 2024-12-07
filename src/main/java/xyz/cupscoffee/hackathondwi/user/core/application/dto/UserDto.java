@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.application.dto;
+package xyz.cupscoffee.hackathondwi.user.core.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

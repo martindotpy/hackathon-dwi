@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xyz.cupscoffee.hackathondwi.user.domain.payload.RegisterUserPayload;
+import xyz.cupscoffee.hackathondwi.user.core.domain.payload.RegisterUserPayload;
 
 @Getter
 @Builder

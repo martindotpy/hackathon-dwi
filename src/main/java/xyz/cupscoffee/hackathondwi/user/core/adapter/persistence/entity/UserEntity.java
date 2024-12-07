@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.adapter.persistence.entity;
+package xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.entity;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
  * <p>
  * This class represents a user in the database. It is the entity
  * representation of the
- * {@link xyz.cupscoffee.hackathondwi.user.domain.model.User User}
+ * {@link xyz.cupscoffee.hackathondwi.user.core.domain.model.User User}
  * class.
  * </p>
  *

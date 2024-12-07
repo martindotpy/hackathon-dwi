@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.application.port.out.JwtAuthenticationPort;
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 @Slf4j
 @Component

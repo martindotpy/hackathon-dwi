@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import xyz.cupscoffee.hackathondwi.auth.application.port.out.GetAuthenticatedUserPort;
 import xyz.cupscoffee.hackathondwi.auth.application.port.out.JwtAuthenticationPort;
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 /**
  * Service to get the authenticated user from the request.

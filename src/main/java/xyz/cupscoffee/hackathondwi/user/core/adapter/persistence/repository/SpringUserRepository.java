@@ -1,10 +1,10 @@
-package xyz.cupscoffee.hackathondwi.user.adapter.persistence.repository;
+package xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import xyz.cupscoffee.hackathondwi.user.adapter.persistence.entity.UserEntity;
+import xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.entity.UserEntity;
 
 /**
  * Spring JPA repository for user entity.

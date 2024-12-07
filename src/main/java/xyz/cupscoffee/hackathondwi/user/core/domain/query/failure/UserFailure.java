@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.domain.query.failure;
+package xyz.cupscoffee.hackathondwi.user.core.domain.query.failure;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

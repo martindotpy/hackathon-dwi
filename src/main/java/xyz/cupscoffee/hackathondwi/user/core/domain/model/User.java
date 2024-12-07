@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.domain.model;
+package xyz.cupscoffee.hackathondwi.user.core.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

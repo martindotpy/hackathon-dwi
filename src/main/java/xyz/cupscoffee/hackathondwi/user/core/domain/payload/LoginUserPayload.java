@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.domain.payload;
+package xyz.cupscoffee.hackathondwi.user.core.domain.payload;
 
 import xyz.cupscoffee.hackathondwi.shared.domain.payload.Payload;
 

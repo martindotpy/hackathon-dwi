@@ -2,7 +2,7 @@ package xyz.cupscoffee.hackathondwi.auth.application.port.out;
 
 import java.util.Optional;
 
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 /**
  * Interface for getting the authenticated user.

@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtCookieViewFilter;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtRequestFilter;
 import xyz.cupscoffee.hackathondwi.shared.adapter.properties.SecurityProperties;
-import xyz.cupscoffee.hackathondwi.user.adapter.persistence.UserPersistenceAdapter;
+import xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.UserPersistenceAdapter;
 
 /**
  * Configuration class for security.

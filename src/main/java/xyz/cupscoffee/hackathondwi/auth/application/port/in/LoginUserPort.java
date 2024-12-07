@@ -3,7 +3,7 @@ package xyz.cupscoffee.hackathondwi.auth.application.port.in;
 import xyz.cupscoffee.hackathondwi.auth.application.dto.JwtDto;
 import xyz.cupscoffee.hackathondwi.auth.domain.query.failure.AuthFailure;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.result.Result;
-import xyz.cupscoffee.hackathondwi.user.domain.payload.LoginUserPayload;
+import xyz.cupscoffee.hackathondwi.user.core.domain.payload.LoginUserPayload;
 
 /**
  * Port for logging in a user.

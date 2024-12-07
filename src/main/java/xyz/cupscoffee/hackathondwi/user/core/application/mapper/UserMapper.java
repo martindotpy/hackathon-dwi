@@ -1,11 +1,11 @@
-package xyz.cupscoffee.hackathondwi.user.application.mapper;
+package xyz.cupscoffee.hackathondwi.user.core.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import xyz.cupscoffee.hackathondwi.user.adapter.persistence.entity.UserEntity;
-import xyz.cupscoffee.hackathondwi.user.application.dto.UserDto;
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.entity.UserEntity;
+import xyz.cupscoffee.hackathondwi.user.core.application.dto.UserDto;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 /**
  * User mapper.

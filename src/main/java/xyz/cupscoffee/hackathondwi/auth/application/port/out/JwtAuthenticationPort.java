@@ -1,6 +1,6 @@
 package xyz.cupscoffee.hackathondwi.auth.application.port.out;
 
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 /**
  * Port for JWT authentication.

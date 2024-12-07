@@ -22,9 +22,9 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.application.port.out.JwtAuthenticationPort;
-import xyz.cupscoffee.hackathondwi.user.application.dto.UserDto;
-import xyz.cupscoffee.hackathondwi.user.application.mapper.UserMapper;
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.application.dto.UserDto;
+import xyz.cupscoffee.hackathondwi.user.core.application.mapper.UserMapper;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 /**
  * The service to authenticate users using JWT.

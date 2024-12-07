@@ -12,10 +12,10 @@ import xyz.cupscoffee.hackathondwi.auth.application.port.out.JwtAuthenticationPo
 import xyz.cupscoffee.hackathondwi.auth.domain.query.failure.AuthFailure;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.UseCase;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.result.Result;
-import xyz.cupscoffee.hackathondwi.user.domain.model.User;
-import xyz.cupscoffee.hackathondwi.user.domain.payload.RegisterUserPayload;
-import xyz.cupscoffee.hackathondwi.user.domain.query.failure.UserFailure;
-import xyz.cupscoffee.hackathondwi.user.domain.repository.UserRepository;
+import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
+import xyz.cupscoffee.hackathondwi.user.core.domain.payload.RegisterUserPayload;
+import xyz.cupscoffee.hackathondwi.user.core.domain.query.failure.UserFailure;
+import xyz.cupscoffee.hackathondwi.user.core.domain.repository.UserRepository;
 
 @Slf4j
 @UseCase
