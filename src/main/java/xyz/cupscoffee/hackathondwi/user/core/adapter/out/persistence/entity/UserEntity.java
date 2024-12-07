@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.entity;
+package xyz.cupscoffee.hackathondwi.user.core.adapter.out.persistence.entity;
 
 import java.util.Collection;
 import java.util.List;

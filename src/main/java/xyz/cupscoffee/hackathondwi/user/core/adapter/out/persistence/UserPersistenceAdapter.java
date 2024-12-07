@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.user.core.adapter.persistence;
+package xyz.cupscoffee.hackathondwi.user.core.adapter.out.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.PersistenceAdapter;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.result.Result;
-import xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.entity.UserEntity;
-import xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.repository.SpringUserRepository;
+import xyz.cupscoffee.hackathondwi.user.core.adapter.out.persistence.entity.UserEntity;
+import xyz.cupscoffee.hackathondwi.user.core.adapter.out.persistence.repository.SpringUserRepository;
 import xyz.cupscoffee.hackathondwi.user.core.application.mapper.UserMapper;
 import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 import xyz.cupscoffee.hackathondwi.user.core.domain.query.failure.UserFailure;
