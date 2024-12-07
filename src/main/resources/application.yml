@@ -69,5 +69,5 @@ security:
 springdoc:
   swagger-ui:
     path: /api/${spring.api.version}/docs
-    operations-sorter: method
-    tagsSorter: alpha
+    operations-sorter: alpha
+    tags-sorter: alpha
