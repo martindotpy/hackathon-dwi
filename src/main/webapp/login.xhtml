@@ -12,41 +12,47 @@
   <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Hackathon DWI</title>
+    <ui:include src="/components/atoms/font.xhtml" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <title>Hackathon DWI</title>
   </h:head>
   <h:body>
+    <ui:include src="/components/organisms/header.xhtml" />
+
     <h:form id="loginForm">
       <p:growl id="messages" showDetail="true" />
 
       <p:panel
-        header="Iniciar Sesión"
+        header="#{msg['login.header']}"
         style="width: 300px; margin: auto; margin-top: 100px"
       >
         <p:messages id="msg" closable="true" autoUpdate="true" />
 
         <p:inputText
-          id="username"
-          value="#{loginView.username}"
-          placeholder="Usuario"
+          id="code"
+          value="#{loginView.code}"
+          placeholder="#{msg['login.code']}"
           required="true"
-          requiredMessage="El nombre de usuario es obligatorio."
-          label="Usuario"
+          requiredMessage="#{msg['login.code.required']}"
+          label="#{msg['login.code']}"
         />
         <p:password
           id="password"
           value="#{loginView.password}"
-          placeholder="Contraseña"
+          placeholder="#{msg['login.password']}"
           required="true"
-          requiredMessage="La contraseña es obligatoria."
-          label="Contraseña"
+          requiredMessage="#{msg['login.password.required']}"
+          label="#{msg['login.password']}"
         />
 
         <p:commandButton
-          value="Iniciar sesión"
+          value="#{msg['login.submit']}"
           actionListener="#{loginView.login}"
           update="messages"
         />
       </p:panel>
     </h:form>
+
+    <ui:include src="/components/organisms/footer.xhtml" />
   </h:body>
 </html>

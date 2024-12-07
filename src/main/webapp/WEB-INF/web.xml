@@ -9,7 +9,7 @@
     <display-name>Hackathon DWI</display-name>
 
     <welcome-file-list>
-        <welcome-file>index.xhtml</welcome-file>
+        <welcome-file>home.xhtml</welcome-file>
     </welcome-file-list>
 
     <context-param>

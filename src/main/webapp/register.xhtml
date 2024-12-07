@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html
+  lang="es"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  xmlns:c="http://java.sun.com/jstl/core"
+>
+  <h:head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <ui:include src="/components/atoms/font.xhtml" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <title>#{msg['register.title']}</title>
+  </h:head>
+  <h:body>
+    <ui:include src="/components/organisms/header.xhtml" />
+
+    <h:form>
+      <p:growl id="messages" showDetail="true" />
+
+      <p:panel header="#{msg['register.header']}">
+        <p:messages id="msg" closable="true" autoUpdate="true" />
+
+        <p:inputText
+          id="code"
+          value="#{registerView.code}"
+          placeholder="#{msg['register.code']}"
+          required="true"
+          requiredMessage="#{msg['register.code.required']}"
+          label="#{msg['register.code']}"
+        />
+        <p:inputText
+          id="name"
+          value="#{registerView.name}"
+          placeholder="#{msg['register.name']}"
+          required="true"
+          requiredMessage="#{msg['register.name.required']}"
+          label="#{msg['register.name']}"
+        />
+        <p:password
+          id="password"
+          value="#{registerView.password}"
+          placeholder="#{msg['register.password']}"
+          required="true"
+          requiredMessage="#{msg['register.password.required']}"
+          label="#{msg['register.password']}"
+        />
+
+        <p:commandButton
+          value="#{msg['register.submit']}"
+          actionListener="#{registerView.register}"
+          update="messages"
+        />
+      </p:panel>
+    </h:form>
+
+    <ui:include src="/components/organisms/footer.xhtml" />
+  </h:body>
+</html>
