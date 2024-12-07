@@ -13,13 +13,13 @@ import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.WebControllerAdapt
 @WebControllerAdapter
 public class GeneralController {
     /**
-     * Index page.
+     * Home page.
      *
-     * @return the index page
+     * @return the home page
      */
     @GetMapping("/")
-    public String getIndex() {
-        return "index";
+    public String getHome() {
+        return "home";
     }
 
     /**
