@@ -16,9 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public final class LogginFilter extends OncePerRequestFilter {
+public final class LoggingFilter extends OncePerRequestFilter {
     private final String[] ignoredPaths = {
             "/favicon.ico",
+            "/jakarta.faces.resource/.*",
+            "/assets/.*\\.(css|ttf)",
+            "/assets/font/.*\\.(css|ttf)",
             "/api/v0/swagger-ui/.*\\.(css|js|png)"
     };
 
