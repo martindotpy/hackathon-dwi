@@ -46,8 +46,6 @@ security:
 
   allowed-public-routes:
     # Ui
-    - /
-    - /index.xhtml
     - /login
     - /login.xhtml
     - /register
@@ -56,6 +54,7 @@ security:
     - /health
     - /health.xhtml
     - /assets/**
+    - /jakarta.faces.resource/**
     # Api
     - /api/${spring.api.version}/auth/**
     # Swagger
