@@ -2,8 +2,6 @@ package xyz.cupscoffee.hackathondwi.auth.adapter.in.view;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +28,6 @@ public class LoginView {
     @Setter
     private String error;
     private final RestClient restClient;
-    private final ObjectMapper objectMapper;
 
     public void login() {
         LoginRequest loginRequest = new LoginRequest(code, password);
