@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.LoginRequest;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.RegisterRequest;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.response.JwtResponse;
@@ -27,7 +26,6 @@ import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureRe
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
 
 @Tag(name = "Auth", description = "Authentication")
-@Slf4j
 @RestController
 @RequestMapping("/api/${spring.api.version}/auth")
 @RequiredArgsConstructor

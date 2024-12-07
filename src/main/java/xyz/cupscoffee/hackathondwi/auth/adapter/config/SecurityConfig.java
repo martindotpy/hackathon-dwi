@@ -13,10 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
-import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtCookieViewFilter;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtRequestFilter;
+import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtViewFilter;
 import xyz.cupscoffee.hackathondwi.shared.adapter.properties.SecurityProperties;
-import xyz.cupscoffee.hackathondwi.user.core.adapter.persistence.UserPersistenceAdapter;
+import xyz.cupscoffee.hackathondwi.user.core.adapter.out.persistence.UserPersistenceAdapter;
 
 /**
  * Configuration class for security.
@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final UserPersistenceAdapter userPersistenceAdapter;
     private final SecurityProperties securityProperties;
     private final JwtRequestFilter jwtRequestFilter;
-    private final JwtCookieViewFilter jwtCookieViewFilter;
+    private final JwtViewFilter jwtViewFilter;
 
     /**
      * Bean for SecurityFilterChain.
@@ -60,7 +60,7 @@ public class SecurityConfig {
                                     .anyRequest().authenticated();
                         })
                 .addFilterBefore(jwtRequestFilter, AnonymousAuthenticationFilter.class)
-                .addFilterBefore(jwtCookieViewFilter, AnonymousAuthenticationFilter.class)
+                .addFilterBefore(jwtViewFilter, AnonymousAuthenticationFilter.class)
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.NEVER))
                 .build();
     }

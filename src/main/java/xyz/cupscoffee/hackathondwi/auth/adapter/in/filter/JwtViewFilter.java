@@ -16,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 import xyz.cupscoffee.hackathondwi.shared.adapter.properties.SecurityProperties;
 
 /**
- * Filter to check if the user has a JWT cookie. redirect to login page if not.
+ * Filter to check if the user has a jwt cookie or authorization header.
  */
 @Component
 @RequiredArgsConstructor
-public class JwtCookieViewFilter extends OncePerRequestFilter {
+public class JwtViewFilter extends OncePerRequestFilter {
     private final SecurityProperties securityProperties;
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -33,7 +33,7 @@ public class JwtCookieViewFilter extends OncePerRequestFilter {
         boolean isExcludedPath = Arrays.stream(securityProperties.getAllowedPublicRoutes())
                 .anyMatch(publicPath -> antPathMatcher.match(publicPath, path));
 
-        if (!isExcludedPath && !hasJwtCookie(request)) {
+        if (!isExcludedPath && !hasJwtCookieOrAuthorizationHeader(request)) {
             response.sendRedirect("/login.xhtml");
             return;
         }
@@ -42,12 +42,13 @@ public class JwtCookieViewFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Check if the request has a jwt cookie.
+     * Check if the request has a jwt cookie or authorization header.
      *
      * @param request the request.
-     * @return true if the request has a jwt cookie, false otherwise.
+     * @return true if the request has a jwt cookie or authorization header, false
+     *         otherwise.
      */
-    private boolean hasJwtCookie(HttpServletRequest request) {
+    private boolean hasJwtCookieOrAuthorizationHeader(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("jwt".equals(cookie.getName())) {
@@ -56,6 +57,8 @@ public class JwtCookieViewFilter extends OncePerRequestFilter {
             }
         }
 
-        return false;
+        String authorizationHeader = request.getHeader("Authorization");
+
+        return authorizationHeader != null && authorizationHeader.startsWith("Bearer ");
     }
 }
