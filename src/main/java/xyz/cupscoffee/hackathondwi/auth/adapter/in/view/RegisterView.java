@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.LoginRequest;
+import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.RegisterRequest;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.response.JwtResponse;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.View;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.view.RestClient;
@@ -19,10 +19,13 @@ import xyz.cupscoffee.hackathondwi.shared.adapter.in.view.RestClient;
 @Slf4j
 @View
 @RequiredArgsConstructor
-public class LoginView {
+public class RegisterView {
     @Getter
     @Setter
     private String code;
+    @Getter
+    @Setter
+    private String name;
     @Getter
     @Setter
     private String password;
@@ -32,14 +35,13 @@ public class LoginView {
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
 
-    public void login() {
-        LoginRequest loginRequest = new LoginRequest(code, password);
-        var response = restClient.post("/auth/login", loginRequest, JwtResponse.class);
+    public void register() {
+        RegisterRequest request = new RegisterRequest(code, name, password);
+        var response = restClient.post("/auth/register", request, JwtResponse.class);
 
         if (response.getStatus() != 200) {
-            log.error("Failed to login user: {}",
+            log.error("Failed to register user: {}",
                     ansi().fgRed().a(response.getBody()).reset());
-
             return;
         }
 
