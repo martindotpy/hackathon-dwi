@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +36,45 @@ public final class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (!(StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer "))) {
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+
+            filterJwt(token, request, response, filterChain);
+            return;
+        }
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authorizationHeader.substring(7);
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("jwt")) {
+                filterJwt(cookie.getValue(), request, response, filterChain);
+                return;
+            }
+        }
 
+        filterChain.doFilter(request, response);
+    }
+
+    /**
+     * Filter JWT token.
+     *
+     * @param token       JWT token.
+     * @param request     HTTP request.
+     * @param response    HTTP response.
+     * @param filterChain Filter chain.
+     * @throws IOException      If an I/O error occurs.
+     * @throws ServletException If an error occurs.
+     */
+    private void filterJwt(
+            final String token,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws IOException, ServletException {
         User user = jwtAuthenticationPort.fromJwt(token);
 
         if (user == null) {

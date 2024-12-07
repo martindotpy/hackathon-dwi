@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
+import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtCookieViewFilter;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.filter.JwtRequestFilter;
 import xyz.cupscoffee.hackathondwi.shared.adapter.properties.SecurityProperties;
 import xyz.cupscoffee.hackathondwi.user.adapter.persistence.UserPersistenceAdapter;
@@ -27,6 +28,7 @@ public class SecurityConfig {
     private final UserPersistenceAdapter userPersistenceAdapter;
     private final SecurityProperties securityProperties;
     private final JwtRequestFilter jwtRequestFilter;
+    private final JwtCookieViewFilter jwtCookieViewFilter;
 
     /**
      * Bean for SecurityFilterChain.
@@ -49,16 +51,16 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(form -> form.disable())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authRequest -> {
                             authRequest
-                                    .requestMatchers(securityProperties.getAllowedPublicRoutes())
-                                    .permitAll()
+                                    .requestMatchers(securityProperties.getAllowedPublicRoutes()).permitAll()
                                     .anyRequest().authenticated();
                         })
                 .addFilterBefore(jwtRequestFilter, AnonymousAuthenticationFilter.class)
+                .addFilterBefore(jwtCookieViewFilter, AnonymousAuthenticationFilter.class)
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.NEVER))
                 .build();
     }
