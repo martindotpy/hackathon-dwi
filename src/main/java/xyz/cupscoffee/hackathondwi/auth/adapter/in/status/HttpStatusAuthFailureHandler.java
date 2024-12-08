@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import xyz.cupscoffee.hackathondwi.auth.domain.query.failure.AuthFailure;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.status.HttpStatusCodeFailureHandler;
 
+/**
+ * Handler for HTTP status codes for authentication failures.
+ */
 @Component
 public final class HttpStatusAuthFailureHandler implements HttpStatusCodeFailureHandler<AuthFailure> {
     @Override
