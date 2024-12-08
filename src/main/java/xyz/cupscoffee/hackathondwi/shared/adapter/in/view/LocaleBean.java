@@ -24,11 +24,20 @@ public class LocaleBean {
     private final HttpServletResponse response;
 
     public String getLanguage() {
-        return localeResolver.resolveLocale(request).getLanguage();
+        String language = localeResolver.resolveLocale(request).getLanguage();
+
+        FacesContext.getCurrentInstance().getViewRoot().setLocale(Locale.forLanguageTag(language));
+
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        changeLanguage(language);
     }
 
     public void changeLanguage(String language) {
         Locale locale = Locale.forLanguageTag(language);
+
         localeResolver.setLocale(request, response, locale);
         FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
 
