@@ -24,8 +24,6 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.result.Result;
  * <p>
  * Implements the {@link SemesterRepository} interface, to be used by the domain
  * layer.
- * Also implements the {@link SemesterDetailsService} interface, to be used by
- * Spring Security.
  * </p>
  */
 @Slf4j
