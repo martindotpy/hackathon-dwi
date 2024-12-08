@@ -64,14 +64,6 @@ public final class SemesterPersistenceAdapter implements SemesterRepository {
     }
 
     @Override
-    public List<Semester> findAllByUserId(Long userId) {
-        return springSemesterRepository.findAllByUserId(userId)
-                .stream()
-                .map(semesterMapper::toDomain)
-                .toList();
-    }
-
-    @Override
     public Result<Void, SemesterFailure> deleteById(Long id) {
         try {
             springSemesterRepository.deleteById(id);

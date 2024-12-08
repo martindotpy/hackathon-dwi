@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.semester.core.adapter.in.controller;
+package xyz.cupscoffee.hackathondwi.semester.course.adapter.in.controller;
 
 import static xyz.cupscoffee.hackathondwi.shared.adapter.in.util.ControllerShortcuts.toDetailedFailureResponse;
 import static xyz.cupscoffee.hackathondwi.shared.adapter.in.util.ControllerShortcuts.toFailureResponse;
@@ -27,14 +27,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import xyz.cupscoffee.hackathondwi.semester.core.adapter.in.request.CreateSemesterRequest;
-import xyz.cupscoffee.hackathondwi.semester.core.adapter.in.request.UpdateSemesterRequest;
-import xyz.cupscoffee.hackathondwi.semester.core.adapter.in.response.PaginatedSemesterResponse;
-import xyz.cupscoffee.hackathondwi.semester.core.adapter.in.response.SemesterContentResponse;
-import xyz.cupscoffee.hackathondwi.semester.core.application.port.in.CreateSemesterPort;
-import xyz.cupscoffee.hackathondwi.semester.core.application.port.in.DeleteSemesterPort;
-import xyz.cupscoffee.hackathondwi.semester.core.application.port.in.FindSemesterPort;
-import xyz.cupscoffee.hackathondwi.semester.core.application.port.in.UpdateSemesterPort;
+import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.request.CreateCourseRequest;
+import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.request.UpdateCourseRequest;
+import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.response.CourseContentResponse;
+import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.response.PaginatedCourseResponse;
+import xyz.cupscoffee.hackathondwi.semester.course.application.port.in.CreateCoursePort;
+import xyz.cupscoffee.hackathondwi.semester.course.application.port.in.DeleteCoursePort;
+import xyz.cupscoffee.hackathondwi.semester.course.application.port.in.FindCoursePort;
+import xyz.cupscoffee.hackathondwi.semester.course.application.port.in.UpdateCoursePort;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.RestControllerAdapter;
 import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureResponse;
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
@@ -46,32 +46,33 @@ import xyz.cupscoffee.hackathondwi.shared.domain.validation.SimpleValidation;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
 import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
-@Tag(name = "Semester", description = "Semester")
+@Tag(name = "Course", description = "Course")
 @RestControllerAdapter
-@RequestMapping("/api/${spring.api.version}/semester")
+@RequestMapping("/api/${spring.api.version}/course")
 @RequiredArgsConstructor
-public final class SemesterController {
-    private final CreateSemesterPort createSemesterPort;
-    private final FindSemesterPort findSemesterPort;
-    private final UpdateSemesterPort updateSemesterPort;
-    private final DeleteSemesterPort deleteSemesterPort;
+public final class CourseController {
+    private final CreateCoursePort createCoursePort;
+    private final FindCoursePort findCoursePort;
+    private final UpdateCoursePort updateCoursePort;
+    private final DeleteCoursePort deleteCoursePort;
 
     /**
-     * Get all semesters by user authenticated id.
+     * Get all courses by user authenticated id.
      *
      * @param user authenticated user.
-     * @return all semesters
+     * @return all courses
      */
-    @Operation(summary = "Get all semesters", description = "Get all semesters by user authenticated id", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved semesters", content = @Content(schema = @Schema(implementation = PaginatedSemesterResponse.class))),
+    @Operation(summary = "Get all courses", description = "Get all courses by criteria", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved courses", content = @Content(schema = @Schema(implementation = PaginatedCourseResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @GetMapping
     public ResponseEntity<?> getAllByCriteria(
+            @RequestParam(name = "semester_id") @Parameter(description = "Semester id") Long semesterId,
             @RequestParam(defaultValue = "10") @Parameter(description = "Limit (max 10)") Integer limit,
             @RequestParam(defaultValue = "1") @Parameter(description = "Page (min 1)") Integer page,
-            @RequestParam(required = false) @Parameter(description = "Name of the semester") String name,
+            @RequestParam(required = false) @Parameter(description = "Name of the course") String name,
             @AuthenticationPrincipal User user) {
         var violations = new CopyOnWriteArrayList<ValidationError>();
 
@@ -88,38 +89,43 @@ public final class SemesterController {
                         new SimpleValidation(
                                 page < 1,
                                 "page",
-                                "Page must be greater than 0")));
+                                "Page must be greater than 0"),
+                        new SimpleValidation(
+                                semesterId < 1,
+                                "semesterId",
+                                "Semester id must be greater than 0")));
 
         if (!violations.isEmpty()) {
             return toDetailedFailureResponse(violations);
         }
 
-        var semesters = findSemesterPort.match(
+        var courses = findCoursePort.match(
                 new Criteria(
                         List.of(
-                                new Filter("user.id", FilterOperator.EQUAL, user.getId().toString()),
+                                new Filter("semester.id", FilterOperator.EQUAL, semesterId.toString()),
+                                new Filter("semester.user.id", FilterOperator.EQUAL, user.getId().toString()),
                                 new Filter("name", FilterOperator.LIKE, name)),
                         Order.none(),
                         limit,
                         page));
 
         return toPaginatedResponse(
-                PaginatedSemesterResponse.class,
-                semesters,
-                "semester.get.all.success",
-                "Semesters retrieved successfully");
+                PaginatedCourseResponse.class,
+                courses,
+                "course.get.all.success",
+                "Courses retrieved successfully");
     }
 
     /**
-     * Get semester by id.
+     * Get course by id.
      *
-     * @param id semester id.
-     * @return semester
+     * @param id course id.
+     * @return course
      */
-    @Operation(summary = "Get semester by id", description = "Get semester by id", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved semester", content = @Content(schema = @Schema(implementation = SemesterContentResponse.class))),
+    @Operation(summary = "Get course by id", description = "Get course by id", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved course", content = @Content(schema = @Schema(implementation = CourseContentResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Semester not found", content = @Content(schema = @Schema(implementation = FailureResponse.class)))
+            @ApiResponse(responseCode = "404", description = "Course not found", content = @Content(schema = @Schema(implementation = FailureResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User user) {
@@ -136,98 +142,98 @@ public final class SemesterController {
             return toDetailedFailureResponse(violations);
         }
 
-        var result = findSemesterPort.matchOne(
+        var result = findCoursePort.matchOne(
                 Criteria.ofMatchOne(
                         new Filter("id", FilterOperator.EQUAL, id.toString()),
-                        new Filter("user.id", FilterOperator.EQUAL, user.getId().toString())));
+                        new Filter("semester.user.id", FilterOperator.EQUAL, user.getId().toString())));
 
         if (result.isFailure()) {
             return toFailureResponse(result.getFailure());
         }
 
         return toOkResponse(
-                SemesterContentResponse.class,
+                CourseContentResponse.class,
                 result.getSuccess(),
-                "semester.get.success",
-                "Semester retrieved successfully");
+                "course.get.success",
+                "Course retrieved successfully");
     }
 
     /**
-     * Create semester.
+     * Create course.
      *
-     * @param request create semester request.
-     * @return created semester
+     * @param request create course request.
+     * @return created course
      */
-    @Operation(summary = "Create semester", description = "Create semester", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully created semester", content = @Content(schema = @Schema(implementation = SemesterContentResponse.class))),
+    @Operation(summary = "Create course", description = "Create course", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully created course", content = @Content(schema = @Schema(implementation = CourseContentResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateSemesterRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> create(@RequestBody CreateCourseRequest request, @AuthenticationPrincipal User user) {
         var violations = request.validate();
 
         if (!violations.isEmpty()) {
             return toDetailedFailureResponse(violations);
         }
 
-        var result = createSemesterPort.create(request, user.getId());
+        var result = createCoursePort.create(request);
 
         if (result.isFailure()) {
             return toFailureResponse(result.getFailure());
         }
 
         return toOkResponse(
-                SemesterContentResponse.class,
+                CourseContentResponse.class,
                 result.getSuccess(),
-                "semester.post.success",
-                "Semester created successfully");
+                "course.post.success",
+                "Course created successfully");
     }
 
     /**
-     * Update semester.
+     * Update course.
      *
-     * @param id      semester id.
-     * @param request update semester request.
-     * @return updated semester
+     * @param id      course id.
+     * @param request update course request.
+     * @return updated course
      */
-    @Operation(summary = "Update semester", description = "Update semester", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated semester", content = @Content(schema = @Schema(implementation = SemesterContentResponse.class))),
+    @Operation(summary = "Update course", description = "Update course", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated course", content = @Content(schema = @Schema(implementation = CourseContentResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Semester not found", content = @Content(schema = @Schema(implementation = FailureResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Course not found", content = @Content(schema = @Schema(implementation = FailureResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateSemesterRequest request) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateCourseRequest request) {
         var violations = request.validate();
 
         if (!violations.isEmpty()) {
             return toDetailedFailureResponse(violations);
         }
 
-        var result = updateSemesterPort.update(request);
+        var result = updateCoursePort.update(request);
 
         if (result.isFailure()) {
             return toFailureResponse(result.getFailure());
         }
 
         return toOkResponse(
-                SemesterContentResponse.class,
+                CourseContentResponse.class,
                 result.getSuccess(),
-                "semester.put.success",
-                "Semester updated successfully");
+                "course.put.success",
+                "Course updated successfully");
     }
 
     /**
-     * Delete semester by id.
+     * Delete course by id.
      *
-     * @param id semester id.
-     * @return deleted semester
+     * @param id course id.
+     * @return deleted course
      */
-    @Operation(summary = "Delete semester", description = "Delete semester by id", responses = {
-            @ApiResponse(responseCode = "200", description = "Successfully deleted semester"),
+    @Operation(summary = "Delete course", description = "Delete course by id", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted course"),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Semester not found", content = @Content(schema = @Schema(implementation = FailureResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Course not found", content = @Content(schema = @Schema(implementation = FailureResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @DeleteMapping("/{id}")
@@ -245,12 +251,12 @@ public final class SemesterController {
             return toDetailedFailureResponse(violations);
         }
 
-        var result = deleteSemesterPort.deleteById(id);
+        var result = deleteCoursePort.deleteById(id);
 
         if (result.isFailure()) {
             return toFailureResponse(result.getFailure());
         }
 
-        return toOkResponse("semester.delete.success", "Semester deleted successfully");
+        return toOkResponse("course.delete.success", "Course deleted successfully");
     }
 }

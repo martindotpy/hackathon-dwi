@@ -2,8 +2,6 @@ package xyz.cupscoffee.hackathondwi.semester.core.application.usecase;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.application.port.out.GetAuthenticatedUserPort;
@@ -15,6 +13,9 @@ import xyz.cupscoffee.hackathondwi.semester.core.domain.query.failure.SemesterFa
 import xyz.cupscoffee.hackathondwi.semester.core.domain.query.payload.UpdateSemesterPayload;
 import xyz.cupscoffee.hackathondwi.semester.core.domain.repository.SemesterRepository;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.UseCase;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Criteria;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Filter;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.FilterOperator;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.result.Result;
 
 /**
@@ -30,24 +31,18 @@ public final class UpdateSemesterUseCase implements UpdateSemesterPort {
 
     @Override
     public Result<SemesterDto, SemesterFailure> update(UpdateSemesterPayload payload) {
-        Optional<Semester> semester = semesterRepository.findById(payload.getId());
+        Long userId = getAuthenticatedUserPort.get().get().getId();
 
-        if (semester.isEmpty()) {
-            log.error("Semester with id {} not found",
-                    ansi().fgBrightRed().a(payload.getId()).reset());
+        var resultSemester = semesterRepository.matchOne(
+                Criteria.ofMatchOne(
+                        Filter.of("id", FilterOperator.EQUAL, payload.getId()),
+                        Filter.of("user.id", FilterOperator.EQUAL, userId)));
 
-            return Result.failure(SemesterFailure.NOT_FOUND);
+        if (resultSemester.isFailure()) {
+            return Result.failure(resultSemester.getFailure());
         }
 
-        Semester semesterToUpdate = semester.get();
-
-        if (!getAuthenticatedUserPort.get().get().getId().equals(semesterToUpdate.getUser().getId())) {
-            log.error("Semester with id {} does not belong to the authenticated user",
-                    ansi().fgBrightRed().a(payload.getId()).reset());
-
-            return Result.failure(SemesterFailure.NOT_FOUND);
-        }
-
+        Semester semesterToUpdate = resultSemester.getSuccess();
         Semester updatedSemester = Semester.builder()
                 .id(semesterToUpdate.getId())
                 .name(payload.getName())
