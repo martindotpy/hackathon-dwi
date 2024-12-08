@@ -1,23 +1,20 @@
 package xyz.cupscoffee.hackathondwi.shared.adapter.in.util;
 
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage.Severity;
 import jakarta.faces.context.FacesContext;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureResponse;
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
 
+/**
+ * Faces shortcuts.
+ */
 @Slf4j
 @Component
 public final class FaceShortcuts {
-    private static ResourceBundleMessageSource messageSource;
-
-    public FaceShortcuts(ResourceBundleMessageSource messageSource) {
-        FaceShortcuts.messageSource = messageSource;
-    }
-
     /**
      * Show a failure message to the user.
      *
@@ -59,16 +56,22 @@ public final class FaceShortcuts {
     }
 
     public static void showFailureMessage(String code, String defaultMessage) {
-        String message = messageSource.getMessage(code, null, defaultMessage,
-                FacesContext.getCurrentInstance().getViewRoot().getLocale());
-        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null);
+        FacesMessage facesMessage = getFacesMessage(FacesMessage.SEVERITY_ERROR, code, defaultMessage);
+
         FacesContext.getCurrentInstance().addMessage(null, facesMessage);
     }
 
     public static void showOkMessage(String code, String defaultMessage) {
-        String message = messageSource.getMessage(code, null, defaultMessage,
-                FacesContext.getCurrentInstance().getViewRoot().getLocale());
-        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, null);
+        FacesMessage facesMessage = getFacesMessage(FacesMessage.SEVERITY_INFO, code, defaultMessage);
+
         FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+    }
+
+    private static FacesMessage getFacesMessage(
+            Severity severity,
+            String code, String defaultMessage) {
+        String message = MessagesShortcuts.getMessage(code, defaultMessage);
+
+        return new FacesMessage(severity, message, null);
     }
 }
