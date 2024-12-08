@@ -16,14 +16,18 @@ public final class ObjectMapperShortcuts {
     }
 
     /**
-     * Maps an object to a class.
+     * Maps a string to an object.
      *
-     * @param object The object to map.
+     * @param value  The string to map.
      * @param clazz  The class to map to.
      * @param <T>    The type of the class.
      * @return The mapped object.
      */
-    public static <T> T map(Object object, Class<T> clazz) {
-        return objectMapper.convertValue(object, clazz);
+    public static <T> T map(String value, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(value, clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
