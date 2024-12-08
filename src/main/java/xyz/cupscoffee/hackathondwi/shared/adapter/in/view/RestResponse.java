@@ -38,4 +38,13 @@ public final class RestResponse<T> {
                 .status(status)
                 .build();
     }
+
+    /**
+     * Get the body as a string.
+     *
+     * @return the body as a string
+     */
+    public String getBodyAsString() {
+        return (String) body;
+    }
 }
