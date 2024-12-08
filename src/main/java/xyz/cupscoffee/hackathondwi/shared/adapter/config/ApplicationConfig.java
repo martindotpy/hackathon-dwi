@@ -3,9 +3,9 @@ package xyz.cupscoffee.hackathondwi.shared.adapter.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
@@ -21,7 +21,6 @@ public class ApplicationConfig {
      * In this case, the ObjectMapper is configured with the following properties:
      * <ul>
      * <li>PropertyNamingStrategy: SNAKE_CASE</li>
-     * <li>SerializationInclusion: CUSTOM</li>
      * </ul>
      *
      *
@@ -34,7 +33,6 @@ public class ApplicationConfig {
     ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-        objectMapper.setSerializationInclusion(Include.CUSTOM);
 
         return objectMapper;
     }
@@ -49,8 +47,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    RestTemplate restTemplate() {
+    RestTemplate restTemplate(ObjectMapper objectMapper) {
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(objectMapper));
 
         return restTemplate;
     }

@@ -29,6 +29,7 @@ public final class RestClient {
     @Value("${springdoc.api-docs.server-url}/api/${spring.api.version}")
     private String baseUrl;
     private String jwt;
+    private final HttpServletRequest servletRequest;
     private final RestTemplate restTemplate;
 
     /**
@@ -78,7 +79,15 @@ public final class RestClient {
      * @return the response
      */
     public <T> RestResponse<?> get(String path, Class<T> responseType) {
-        return RestResponse.of(200, restTemplate.getForObject(baseUrl + path, responseType));
+        try {
+            loadJwtFromCookies(servletRequest);
+
+            return RestResponse.of(200, restTemplate.getForObject(baseUrl + path, responseType));
+        } catch (RestClientException e) {
+            log.error("Error while making GET request", e);
+
+            return RestResponse.of(500);
+        }
     }
 
     /**
@@ -92,6 +101,8 @@ public final class RestClient {
      */
     public <T> RestResponse<? extends Object> post(String path, Object request, Class<T> responseType) {
         try {
+            loadJwtFromCookies(servletRequest);
+
             return RestResponse.of(200, restTemplate.postForObject(baseUrl + path, request, responseType));
         } catch (HttpClientErrorException e) {
             int status = e.getStatusCode().value();
@@ -118,6 +129,8 @@ public final class RestClient {
      * @param responseType the response type.
      */
     public <T> RestResponse<?> put(String path, Object request, Class<T> responseType) {
+        loadJwtFromCookies(servletRequest);
+
         restTemplate.put(baseUrl + path, request);
 
         return RestResponse.of(200);
@@ -129,6 +142,8 @@ public final class RestClient {
      * @param path the path.
      */
     public RestResponse<?> delete(String path) {
+        loadJwtFromCookies(servletRequest);
+
         restTemplate.delete(baseUrl + path);
 
         return RestResponse.of(200);

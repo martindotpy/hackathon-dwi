@@ -19,7 +19,135 @@
   <h:body>
     <ui:include src="/components/organisms/header.xhtml" />
 
-    <main>Hackathon dwi</main>
+    <main class="main-search-table">
+      <h1>#{msg['home.header']}</h1>
+      <div class="actions">
+        <h:form>
+          <p:inputText
+            id="search"
+            value="#{homeView.searchName}"
+            placeholder="#{msg['home.action.search.placeholder']}"
+          />
+          <p:commandButton
+            value="#{msg['home.action.search.button']}"
+            actionListener="#{homeView.search}"
+            update="semesterTable"
+          />
+          <p:commandButton
+            value="#{msg['home.action.create.button']}"
+            update="semesterTable"
+            icon="pi pi-plus"
+            oncomplete="PF('createDialog').show()"
+          />
+        </h:form>
+      </div>
+
+      <p:dataTable
+        id="semesterTable"
+        var="semester"
+        value="#{homeView.semesterLazyDataModel}"
+        paginator="true"
+        rows="#{homeView.semesters.size}"
+        dynamic="true"
+        lazy="true"
+        currentPageReportTemplate="Página {currentPage} de {totalPages}"
+        paginatorPosition="bottom"
+      >
+        <p:column headerText="Id" style="width: 10%">
+          <h:outputText value="#{semester.id}" />
+        </p:column>
+
+        <p:column
+          headerText="#{msg['home.table.column.name']}"
+          style="width: 45%"
+        >
+          <h:outputText value="#{semester.name}" />
+        </p:column>
+
+        <p:column
+          headerText="#{msg['home.table.column.actions']}"
+          style="width: 55%"
+        >
+          <div class="table-actions">
+            <p:link
+              value="#{msg['home.table.action.courses']}"
+              outcome="/courses.xhtml"
+              class="ui-button ui-widget ui-state-default ui-corner-all action details"
+            >
+              <f:param name="semester_id" value="#{semester.id}" />
+            </p:link>
+            <p:commandButton
+              value="#{msg['home.table.action.edit']}"
+              icon="pi pi-pencil"
+              actionListener="#{homeView.prepareUpdate(semester)}"
+              class="action update"
+              update=":updateDialog"
+              oncomplete="PF('updateDialog').show()"
+            />
+            <p:commandButton
+              value="#{msg['home.table.action.delete']}"
+              icon="pi pi-trash"
+              actionListener="#{homeView.delete(semester.id)}"
+              update="semesterTable"
+              class="action delete"
+            />
+          </div>
+        </p:column>
+      </p:dataTable>
+    </main>
+
+    <p:dialog
+      id="createDialog"
+      class="dialog"
+      header="#{msg['home.dialog.create.title']}"
+      widgetVar="createDialog"
+      modal="true"
+      resizable="false"
+      draggable="false"
+    >
+      <h:form>
+        <h:outputLabel value="#{msg['home.dialog.create.name.label']}">
+          <p:inputText
+            id="createName"
+            value="#{homeView.createSemesterName}"
+            placeholder="#{msg['home.dialog.create.name.placeholder']}"
+          />
+        </h:outputLabel>
+
+        <p:commandButton
+          value="#{msg['home.dialog.create.submit']}"
+          actionListener="#{homeView.create}"
+          update="semesterTable"
+          oncomplete="PF('createDialog').hide()"
+        />
+      </h:form>
+    </p:dialog>
+
+    <p:dialog
+      id="updateDialog"
+      class="dialog"
+      header="#{msg['home.dialog.update.title']}"
+      widgetVar="updateDialog"
+      modal="true"
+      resizable="false"
+      draggable="false"
+    >
+      <h:form>
+        <h:outputLabel value="#{msg['home.dialog.update.name.label']}">
+          <p:inputText
+            id="updatedName"
+            value="#{homeView.updatedSemesterName}"
+            placeholder="#{msg['home.dialog.update.name.placeholder']}"
+          />
+        </h:outputLabel>
+        <p:commandButton
+          value="#{msg['home.dialog.update.submit']}"
+          actionListener="#{homeView.update}"
+          update="semesterTable"
+          oncomplete="PF('updateDialog').hide()"
+        />
+      </h:form>
+    </p:dialog>
 
     <ui:include src="/components/organisms/footer.xhtml" />
   </h:body>

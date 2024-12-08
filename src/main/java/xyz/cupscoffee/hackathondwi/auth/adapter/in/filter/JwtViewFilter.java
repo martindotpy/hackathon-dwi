@@ -30,10 +30,15 @@ public class JwtViewFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String path = request.getRequestURI();
 
+        if (path.startsWith("/api")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         boolean isExcludedPath = Arrays.stream(securityProperties.getAllowedPublicRoutes())
                 .anyMatch(publicPath -> antPathMatcher.match(publicPath, path));
 
-        if (!isExcludedPath && !hasJwtCookieOrAuthorizationHeader(request)) {
+        if (!isExcludedPath && !hasJwtCookie(request)) {
             response.sendRedirect("/login");
             return;
         }
@@ -44,27 +49,6 @@ public class JwtViewFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    /**
-     * Check if the request has a jwt cookie or authorization header.
-     *
-     * @param request the request.
-     * @return true if the request has a jwt cookie or authorization header, false
-     *         otherwise.
-     */
-    private boolean hasJwtCookieOrAuthorizationHeader(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("jwt".equals(cookie.getName())) {
-                    return true;
-                }
-            }
-        }
-
-        String authorizationHeader = request.getHeader("Authorization");
-
-        return authorizationHeader != null && authorizationHeader.startsWith("Bearer ");
     }
 
     private boolean hasJwtCookie(HttpServletRequest request) {

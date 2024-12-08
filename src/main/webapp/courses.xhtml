@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html
+  lang="es"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  xmlns:c="http://java.sun.com/jstl/core"
+>
+  <h:head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <ui:include src="/components/atoms/font.xhtml" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <title>Home</title>
+  </h:head>
+  <h:body>
+    <f:metadata>
+      <f:viewParam name="semester_id" value="#{courseView.semesterId}" />
+    </f:metadata>
+
+    <ui:include src="/components/organisms/header.xhtml" />
+
+    <main>
+      <h1>Semestres</h1>
+      <h:form>
+        <p:inputText
+          id="search"
+          value="#{homeView.searchName}"
+          placeholder="Buscar..."
+        />
+        <p:commandButton value="Buscar" actionListener="#{homeView.search}" />
+      </h:form>
+      <p:dataTable
+        id="semesterTable"
+        var="semester"
+        value="#{homeView.semesterLazyDataModel}"
+        paginator="true"
+        rows="#{homeView.semesters.size}"
+        dynamic="true"
+        lazy="true"
+        currentPageReportTemplate="Página {currentPage} de {totalPages}"
+        paginatorPosition="bottom"
+      >
+        <p:column headerText="ID">
+          <h:outputText value="#{semester.id}" />
+        </p:column>
+
+        <p:column headerText="Nombre">
+          <h:outputText value="#{semester.name}" />
+        </p:column>
+
+        <p:column headerText="Acción">
+          <a href="/courses.xhtml?semester_id=#{semester.id}"> Ver Cursos </a>
+        </p:column>
+      </p:dataTable>
+    </main>
+
+    <ui:include src="/components/organisms/footer.xhtml" />
+  </h:body>
+</html>

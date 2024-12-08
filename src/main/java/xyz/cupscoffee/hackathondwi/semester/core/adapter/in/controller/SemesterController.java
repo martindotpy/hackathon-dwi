@@ -42,6 +42,7 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Criteria;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Filter;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.FilterOperator;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Order;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.OrderType;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.SimpleValidation;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
 import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
@@ -99,7 +100,7 @@ public final class SemesterController {
                         List.of(
                                 new Filter("user.id", FilterOperator.EQUAL, user.getId().toString()),
                                 new Filter("name", FilterOperator.LIKE, name)),
-                        Order.none(),
+                        Order.of("id", OrderType.DESC),
                         limit,
                         page));
 
@@ -237,7 +238,7 @@ public final class SemesterController {
         violations.addAll(
                 validate(
                         new SimpleValidation(
-                                id > 0,
+                                id < 1,
                                 "id",
                                 "Id must be greater than 0")));
 

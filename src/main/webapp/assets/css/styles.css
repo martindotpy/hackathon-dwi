@@ -1,3 +1,5 @@
+@import "primeicons/primeicons.css";
+
 /* General styles */
 :root {
   --main-font-family: "Geist", system-ui, -apple-system, BlinkMacSystemFont,
@@ -9,10 +11,18 @@
 }
 
 * {
-  font-family: var(--main-font-family) !important;
+  font-family: var(--main-font-family);
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+a {
+  font-family: var(--main-font-family) !important;
+}
+
+input {
+  font-family: var(--main-font-family) !important;
 }
 
 body {
@@ -40,7 +50,6 @@ header {
 }
 
 /* Footer */
-
 footer {
   display: flex;
   justify-content: center;
@@ -68,7 +77,7 @@ footer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .auth-form .fields-container input {
@@ -84,4 +93,97 @@ footer {
   font-size: 0.8rem;
   margin-top: 0.5rem;
   color: gray;
+}
+
+/* Search - table page */
+.main-search-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 1rem;
+}
+
+.main-search-table > .actions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.main-search-table > .actions form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.main-search-table > .actions form input[type="text"] {
+  width: 100%;
+}
+
+.main-search-table > .actions form button {
+  width: 8rem;
+}
+
+.table-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.table-actions .action {
+  width: 8rem;
+}
+
+.table-actions .action.details {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 39px;
+}
+
+.table-actions .action.details:hover {
+  background-color: #0d89ec;
+}
+
+.table-actions .action.update {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.table-actions .action.update:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+.table-actions .action.delete {
+  background-color: #ff4d4d;
+  border-color: #ff4d4d;
+}
+
+.table-actions .action.delete:hover {
+  background-color: #ff3333;
+}
+
+/* Update dialog */
+
+.dialog form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.dialog form input {
+  width: 100%;
+}
+
+.dialog form button {
+  width: 100%;
+  margin-top: 1rem;
 }

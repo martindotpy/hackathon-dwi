@@ -1,9 +1,9 @@
 package xyz.cupscoffee.hackathondwi.semester.core.adapter.in.request;
 
-import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import xyz.cupscoffee.hackathondwi.semester.core.domain.query.payload.UpdateSeme
 @AllArgsConstructor
 public final class UpdateSemesterRequest implements UpdateSemesterPayload {
     @NotNull(message = "semester.update.request.id.not-null")
-    @NegativeOrZero(message = "semester.update.request.id.negative-or-zero")
+    @Positive(message = "semester.update.request.id.positive")
     private Long id;
 
     @NotNull(message = "semester.update.request.name.not-null")

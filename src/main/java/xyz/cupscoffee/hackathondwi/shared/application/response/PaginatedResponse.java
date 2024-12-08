@@ -2,7 +2,9 @@ package xyz.cupscoffee.hackathondwi.shared.application.response;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.paginated.Paginated;
 
@@ -11,13 +13,15 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.paginated.Paginated;
  */
 @Getter
 @SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaginatedResponse<T> {
-    private final int page;
-    private final int size;
-    private final int totalPages;
-    private final long totalElements;
-    private final String message;
-    private final List<T> content;
+    private int page;
+    private int size;
+    private int totalPages;
+    private long totalElements;
+    private String message;
+    private List<T> content;
 
     /**
      * Creates a paginated response from a paginated object.

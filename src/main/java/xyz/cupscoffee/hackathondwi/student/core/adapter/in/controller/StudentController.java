@@ -241,7 +241,7 @@ public final class StudentController {
         violations.addAll(
                 validate(
                         new SimpleValidation(
-                                id > 0,
+                                id < 1,
                                 "id",
                                 "Id must be greater than 0")));
 

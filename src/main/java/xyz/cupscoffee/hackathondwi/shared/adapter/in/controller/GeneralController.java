@@ -23,6 +23,16 @@ public class GeneralController {
     }
 
     /**
+     * Home page.
+     *
+     * @return the home page
+     */
+    @GetMapping("/home")
+    public String getHome2() {
+        return "home";
+    }
+
+    /**
      * Health page.
      *
      * @param model the view.

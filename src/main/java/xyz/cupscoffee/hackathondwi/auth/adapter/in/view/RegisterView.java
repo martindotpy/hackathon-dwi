@@ -4,6 +4,8 @@ import static org.fusesource.jansi.Ansi.ansi;
 import static xyz.cupscoffee.hackathondwi.shared.adapter.in.util.FaceShortcuts.showFailureMessage;
 
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -12,14 +14,15 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.RegisterRequest;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.response.JwtResponse;
-import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.View;
+import xyz.cupscoffee.hackathondwi.shared.adapter.in.util.FaceShortcuts;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.util.ObjectMapperShortcuts;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.view.RestClient;
 import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureResponse;
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
 
 @Slf4j
-@View
+@ViewScoped
+@Named
 @RequiredArgsConstructor
 public class RegisterView {
     @Getter
@@ -69,5 +72,11 @@ public class RegisterView {
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         httpResponse.addCookie(jwtCookie);
+
+        FaceShortcuts.showOkMessage("auth.register.success", "User registered successfully!");
+
+        // Redirect to home
+        facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null,
+                "/home.xhtml?faces-redirect=true");
     }
 }

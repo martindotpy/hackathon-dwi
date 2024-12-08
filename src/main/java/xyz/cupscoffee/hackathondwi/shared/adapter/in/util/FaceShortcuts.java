@@ -1,5 +1,8 @@
 package xyz.cupscoffee.hackathondwi.shared.adapter.in.util;
 
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.stereotype.Component;
+
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +10,14 @@ import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureRe
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
 
 @Slf4j
+@Component
 public final class FaceShortcuts {
+    private static ResourceBundleMessageSource messageSource;
+
+    public FaceShortcuts(ResourceBundleMessageSource messageSource) {
+        FaceShortcuts.messageSource = messageSource;
+    }
+
     /**
      * Show a failure message to the user.
      *
@@ -46,5 +56,19 @@ public final class FaceShortcuts {
                 null);
 
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public static void showFailureMessage(String code, String defaultMessage) {
+        String message = messageSource.getMessage(code, null, defaultMessage,
+                FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null);
+        FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+    }
+
+    public static void showOkMessage(String code, String defaultMessage) {
+        String message = messageSource.getMessage(code, null, defaultMessage,
+                FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, null);
+        FacesContext.getCurrentInstance().addMessage(null, facesMessage);
     }
 }
