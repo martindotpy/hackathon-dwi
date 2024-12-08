@@ -2,19 +2,24 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:h="http://xmlns.jcp.org/jsf/html"
   xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:c="http://java.sun.com/jstl/core"
 >
-  <h:panelGroup styleClass="header">
-    <h:outputText value="Hackathon DWI" styleClass="header-title" />
-  </h:panelGroup>
+  <header>
+    <h:outputText value="Hackathon DWI" class="header-title" />
 
-  <h:form>
-    <h:commandLink
-      value="English"
-      action="#{localeBean.changeLanguage('en')}"
-    />
-    <h:commandLink
-      value="Español"
-      action="#{localeBean.changeLanguage('es')}"
-    />
-  </h:form>
+    <!-- Language Switcher -->
+    <h:form>
+      <p:selectOneMenu
+        value="#{localeBean.language}"
+        onchange="setTimeout(() => window.location.replace(window.location.href), 25);"
+        style="width: 150px"
+      >
+        <f:selectItem itemLabel="English" itemValue="en" />
+        <f:selectItem itemLabel="Español" itemValue="es" />
+        <p:ajax event="change" update="@this" process="@form" />
+      </p:selectOneMenu>
+    </h:form>
+  </header>
 </ui:composition>

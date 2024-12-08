@@ -1,6 +1,7 @@
 package xyz.cupscoffee.hackathondwi.auth.adapter.in.view;
 
 import static org.fusesource.jansi.Ansi.ansi;
+import static xyz.cupscoffee.hackathondwi.shared.adapter.in.util.FaceShortcuts.showFailureMessage;
 
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.Cookie;
@@ -12,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.request.RegisterRequest;
 import xyz.cupscoffee.hackathondwi.auth.adapter.in.response.JwtResponse;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.View;
+import xyz.cupscoffee.hackathondwi.shared.adapter.in.util.ObjectMapperShortcuts;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.view.RestClient;
+import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureResponse;
+import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
 
 @Slf4j
 @View
@@ -29,7 +33,7 @@ public class RegisterView {
     private String password;
     @Getter
     @Setter
-    private String error;
+    private String confirmPassword;
     private final RestClient restClient;
 
     public void register() {
@@ -37,8 +41,22 @@ public class RegisterView {
         var response = restClient.post("/auth/register", request, JwtResponse.class);
 
         if (response.getStatus() != 200) {
-            log.error("Failed to register user: {}",
-                    ansi().fgRed().a(response.getBody()).reset());
+            if (response.getStatus() == 400) {
+                DetailedFailureResponse failure = (DetailedFailureResponse) ObjectMapperShortcuts
+                        .map(response.getBodyAsString(), DetailedFailureResponse.class);
+
+                showFailureMessage(failure);
+
+            } else {
+                FailureResponse failure = (FailureResponse) ObjectMapperShortcuts
+                        .map(response.getBodyAsString(), FailureResponse.class);
+
+                showFailureMessage(failure);
+
+                log.error("Failed to register user: {}",
+                        ansi().fgRed().a(response.getBody()).reset());
+            }
+
             return;
         }
 

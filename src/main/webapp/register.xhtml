@@ -19,44 +19,48 @@
   <h:body>
     <ui:include src="/components/organisms/header.xhtml" />
 
-    <h:form>
-      <p:growl id="messages" showDetail="true" />
-
-      <p:panel header="#{msg['register.header']}">
-        <p:messages id="msg" closable="true" autoUpdate="true" />
-
-        <p:inputText
-          id="code"
-          value="#{registerView.code}"
-          placeholder="#{msg['register.code']}"
-          required="true"
-          requiredMessage="#{msg['register.code.required']}"
-          label="#{msg['register.code']}"
-        />
-        <p:inputText
-          id="name"
-          value="#{registerView.name}"
-          placeholder="#{msg['register.name']}"
-          required="true"
-          requiredMessage="#{msg['register.name.required']}"
-          label="#{msg['register.name']}"
-        />
-        <p:password
-          id="password"
-          value="#{registerView.password}"
-          placeholder="#{msg['register.password']}"
-          required="true"
-          requiredMessage="#{msg['register.password.required']}"
-          label="#{msg['register.password']}"
-        />
-
-        <p:commandButton
-          value="#{msg['register.submit']}"
-          actionListener="#{registerView.register}"
-          update="messages"
-        />
-      </p:panel>
-    </h:form>
+    <main>
+      <h:form class="auth-form">
+        <p:growl id="messages" showDetail="true" />
+        <p:panel header="#{msg['register.header']}">
+          <div class="fields-container">
+            <p:inputText
+              id="code"
+              value="#{registerView.code}"
+              placeholder="#{msg['register.code']}"
+              required="true"
+              requiredMessage="#{msg['register.code.required']}"
+              label="#{msg['register.code']}"
+            />
+            <p:inputText
+              id="name"
+              value="#{registerView.name}"
+              placeholder="#{msg['register.name']}"
+              required="true"
+              requiredMessage="#{msg['register.name.required']}"
+              label="#{msg['register.name']}"
+            />
+            <p:password
+              id="password"
+              value="#{registerView.password}"
+              placeholder="#{msg['register.password']}"
+              required="true"
+              requiredMessage="#{msg['register.password.required']}"
+              label="#{msg['register.password']}"
+            />
+            <p:commandButton
+              value="#{msg['register.submit']}"
+              actionListener="#{registerView.register}"
+              update="messages"
+            />
+          </div>
+        </p:panel>
+        <p>
+          #{msg['register.login.text']}
+          <a href="/login">#{msg['register.login.link']}</a>
+        </p>
+      </h:form>
+    </main>
 
     <ui:include src="/components/organisms/footer.xhtml" />
   </h:body>

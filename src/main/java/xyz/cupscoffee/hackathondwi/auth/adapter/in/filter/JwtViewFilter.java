@@ -34,7 +34,12 @@ public class JwtViewFilter extends OncePerRequestFilter {
                 .anyMatch(publicPath -> antPathMatcher.match(publicPath, path));
 
         if (!isExcludedPath && !hasJwtCookieOrAuthorizationHeader(request)) {
-            response.sendRedirect("/login.xhtml");
+            response.sendRedirect("/login");
+            return;
+        }
+
+        if (hasJwtCookie(request) && (path.startsWith("/login") || path.startsWith("/register"))) {
+            response.sendRedirect("/");
             return;
         }
 
@@ -60,5 +65,17 @@ public class JwtViewFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         return authorizationHeader != null && authorizationHeader.startsWith("Bearer ");
+    }
+
+    private boolean hasJwtCookie(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
