@@ -1,7 +1,8 @@
-package xyz.cupscoffee.hackathondwi.semester.course.adapter.out.persistence.entity;
+package xyz.cupscoffee.hackathondwi.exam.core.adapter.out.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,16 +12,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xyz.cupscoffee.hackathondwi.semester.core.adapter.out.persistence.entity.SemesterEntity;
+import xyz.cupscoffee.hackathondwi.semester.course.adapter.out.persistence.entity.CourseEntity;
 
 /**
- * Course entity.
+ * Exam entity.
  *
  * <p>
- * This class represents a course in the database. It is the entity
+ * This class represents a exam in the database. It is the entity
  * representation of the
- * {@link xyz.cupscoffee.hackathondwi.semester.course.domain.model.Course
- * Course}
+ * {@link xyz.cupscoffee.hackathondwi.course.exam.domain.model.Exam
+ * Exam}
  * class.
  * </p>
  */
@@ -29,8 +30,8 @@ import xyz.cupscoffee.hackathondwi.semester.core.adapter.out.persistence.entity.
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "course")
-public class CourseEntity {
+@Table(name = "exam")
+public class ExamEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "BIGINT UNSIGNED")
@@ -39,6 +40,6 @@ public class CourseEntity {
     @Column(columnDefinition = "VARCHAR(50)", nullable = false)
     private String name;
 
-    @ManyToOne
-    private SemesterEntity semester;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private CourseEntity course;
 }

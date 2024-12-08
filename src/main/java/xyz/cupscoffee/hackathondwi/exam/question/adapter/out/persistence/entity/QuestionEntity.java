@@ -1,4 +1,4 @@
-package xyz.cupscoffee.hackathondwi.semester.course.adapter.out.persistence.entity;
+package xyz.cupscoffee.hackathondwi.exam.question.adapter.out.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,16 +11,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xyz.cupscoffee.hackathondwi.semester.core.adapter.out.persistence.entity.SemesterEntity;
+import xyz.cupscoffee.hackathondwi.exam.core.adapter.out.persistence.entity.ExamEntity;
 
 /**
- * Course entity.
+ * Question entity.
  *
  * <p>
- * This class represents a course in the database. It is the entity
+ * This class represents a question in the database. It is the entity
  * representation of the
- * {@link xyz.cupscoffee.hackathondwi.semester.course.domain.model.Course
- * Course}
+ * {@link xyz.cupscoffee.hackathondwi.exam.question.domain.model.Question
+ * Question}
  * class.
  * </p>
  */
@@ -29,16 +29,18 @@ import xyz.cupscoffee.hackathondwi.semester.core.adapter.out.persistence.entity.
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "course")
-public class CourseEntity {
+@Table(name = "question")
+public class QuestionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(50)", nullable = false)
-    private String name;
+    @Column(name = "`order`", columnDefinition = "TINYINT UNSIGNED", nullable = false)
+    private Integer order;
+    @Column(columnDefinition = "TINYINT UNSIGNED", nullable = false)
+    private Integer maxValue;
 
     @ManyToOne
-    private SemesterEntity semester;
+    private ExamEntity exam;
 }

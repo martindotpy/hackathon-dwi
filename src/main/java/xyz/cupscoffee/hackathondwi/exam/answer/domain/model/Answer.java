@@ -1,29 +1,27 @@
-package xyz.cupscoffee.hackathondwi.semester.course.domain.model;
-
-import java.util.List;
+package xyz.cupscoffee.hackathondwi.exam.answer.domain.model;
 
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xyz.cupscoffee.hackathondwi.semester.core.domain.model.Semester;
+import xyz.cupscoffee.hackathondwi.exam.question.domain.model.Question;
 import xyz.cupscoffee.hackathondwi.student.core.domain.model.Student;
 
 /**
- * Course.
+ * Answer.
  */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class Answer {
     private Long id;
 
-    private String name;
+    private Integer value;
 
     @Nullable
-    private Semester semester;
+    private Student student;
     @Nullable
-    private List<Student> students;
+    private Question question;
 }
