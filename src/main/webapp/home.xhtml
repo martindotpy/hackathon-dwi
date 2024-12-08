@@ -21,6 +21,8 @@
 
     <main class="main-search-table">
       <h1>#{msg['home.header']}</h1>
+
+      <!-- View actions -->
       <div class="actions">
         <h:form>
           <p:inputText
@@ -42,6 +44,7 @@
         </h:form>
       </div>
 
+      <!-- Data -->
       <p:dataTable
         id="semesterTable"
         var="semester"
@@ -69,6 +72,7 @@
           style="width: 55%"
         >
           <div class="table-actions">
+            <!-- Courses -->
             <p:link
               value="#{msg['home.table.action.courses']}"
               outcome="/courses.xhtml"
@@ -76,14 +80,18 @@
             >
               <f:param name="semester_id" value="#{semester.id}" />
             </p:link>
+
+            <!-- Update semester -->
             <p:commandButton
-              value="#{msg['home.table.action.edit']}"
+              value="#{msg['home.table.action.update']}"
               icon="pi pi-pencil"
               actionListener="#{homeView.prepareUpdate(semester)}"
               class="action update"
               update=":updateDialog"
               oncomplete="PF('updateDialog').show()"
             />
+
+            <!-- Delete semester -->
             <p:commandButton
               value="#{msg['home.table.action.delete']}"
               icon="pi pi-trash"
@@ -96,6 +104,7 @@
       </p:dataTable>
     </main>
 
+    <!-- Create semester dialog -->
     <p:dialog
       id="createDialog"
       class="dialog"
@@ -123,6 +132,7 @@
       </h:form>
     </p:dialog>
 
+    <!-- Update semester dialog -->
     <p:dialog
       id="updateDialog"
       class="dialog"
