@@ -195,7 +195,22 @@ public final class ControllerShortcuts {
         Objects.requireNonNull(validationErrors, "The validation errors cannot be null");
 
         List<String> details = validationErrors.stream()
-                .map(validationError -> validationError.getField() + ": " + validationError.getMessage())
+                .map(validationError -> {
+                    String message = messageSource.getMessage(
+                            validationError.getMessage(),
+                            null,
+                            null,
+                            LocaleContextHolder.getLocale());
+
+                    if (message == null) {
+                        log.warn("The message code is empty, using the code message `{}`",
+                                validationError.getMessage());
+
+                        message = validationError.getMessage();
+                    }
+
+                    return message;
+                })
                 .toList();
 
         log.info("Creating validation failure response with validation errors `{}`", details);
