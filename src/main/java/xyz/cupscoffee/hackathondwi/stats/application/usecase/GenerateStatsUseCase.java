@@ -157,6 +157,10 @@ public final class GenerateStatsUseCase implements GenerateStatsPort {
 
         // First place
         int firstPositionScore = sortedScores.get(sortedScores.size() - 1).getValue();
+        if (firstPositionScore == 0) {
+            return ThreePositions.builder().build();
+        }
+
         List<StudentDto> firstPositionCodes = sortedScores.stream()
                 .filter(entry -> entry.getValue() == firstPositionScore)
                 .map(Map.Entry::getKey)
@@ -175,6 +179,10 @@ public final class GenerateStatsUseCase implements GenerateStatsPort {
 
         // Second place
         int secondPositionScore = sortedScores.get(sortedScores.size() - 1).getValue();
+        if (secondPositionScore == 0) {
+            return ThreePositions.builder().firstPositionCodes(firstPositionCodes).build();
+        }
+
         List<StudentDto> secondPositionCodes = sortedScores.stream()
                 .filter(entry -> entry.getValue() == secondPositionScore)
                 .map(Map.Entry::getKey)
@@ -193,6 +201,13 @@ public final class GenerateStatsUseCase implements GenerateStatsPort {
 
         // Third place
         int thirdPositionScore = sortedScores.get(sortedScores.size() - 1).getValue();
+        if (thirdPositionScore == 0) {
+            return ThreePositions.builder()
+                    .firstPositionCodes(firstPositionCodes)
+                    .secondPositionCodes(secondPositionCodes)
+                    .build();
+        }
+
         List<StudentDto> thirdPositionCodes = sortedScores.stream()
                 .filter(entry -> entry.getValue() == thirdPositionScore)
                 .map(Map.Entry::getKey)

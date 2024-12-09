@@ -57,34 +57,61 @@
             <tr>
               <td>1°</td>
               <td>
-                <ui:repeat
-                  value="#{statsView.stats.threePositions.firstPositionCodes}"
-                  var="student"
+                <c:if
+                  test="#{not empty statsView.stats.threePositions.firstPositionCodes}"
                 >
-                  #{student.code}<br />
-                </ui:repeat>
+                  <ui:repeat
+                    value="#{statsView.stats.threePositions.firstPositionCodes}"
+                    var="student"
+                  >
+                    #{student.code}<br />
+                  </ui:repeat>
+                </c:if>
+                <c:if
+                  test="#{empty statsView.stats.threePositions.firstPositionCodes}"
+                >
+                  #{msg['stats.three-positions.no-student']}
+                </c:if>
               </td>
             </tr>
             <tr>
               <td>2°</td>
               <td>
-                <ui:repeat
-                  value="#{statsView.stats.threePositions.secondPositionCodes}"
-                  var="student"
+                <c:if
+                  test="#{not empty statsView.stats.threePositions.secondPositionCodes}"
                 >
-                  #{student.code}<br />
-                </ui:repeat>
+                  <ui:repeat
+                    value="#{statsView.stats.threePositions.secondPositionCodes}"
+                    var="student"
+                  >
+                    #{student.code}<br />
+                  </ui:repeat>
+                </c:if>
+                <c:if
+                  test="#{empty statsView.stats.threePositions.secondPositionCodes}"
+                >
+                  #{msg['stats.three-positions.no-student']}
+                </c:if>
               </td>
             </tr>
             <tr>
               <td>3°</td>
               <td>
-                <ui:repeat
-                  value="#{statsView.stats.threePositions.thirdPositionCodes}"
-                  var="student"
+                <c:if
+                  test="#{not empty statsView.stats.threePositions.thirdPositionCodes}"
                 >
-                  #{student.code}<br />
-                </ui:repeat>
+                  <ui:repeat
+                    value="#{statsView.stats.threePositions.thirdPositionCodes}"
+                    var="student"
+                  >
+                    #{student.code}<br />
+                  </ui:repeat>
+                </c:if>
+                <c:if
+                  test="#{empty statsView.stats.threePositions.thirdPositionCodes}"
+                >
+                  #{msg['stats.three-positions.no-student']}
+                </c:if>
               </td>
             </tr>
           </tbody>
