@@ -43,6 +43,7 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Criteria;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Filter;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.FilterOperator;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Order;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.OrderType;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.SimpleValidation;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
 import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
@@ -75,6 +76,7 @@ public final class CourseController {
             @RequestParam(name = "semester_id") @Parameter(description = "Semester id") Long semesterId,
             @RequestParam(defaultValue = "10") @Parameter(description = "Limit (max 10)") Integer limit,
             @RequestParam(defaultValue = "1") @Parameter(description = "Page (min 1)") Integer page,
+            @RequestParam(required = false) @Parameter(description = "Id of the course") Long id,
             @RequestParam(required = false) @Parameter(description = "Name of the course") String name,
             @AuthenticationPrincipal User user) {
         var violations = new CopyOnWriteArrayList<ValidationError>();
@@ -117,8 +119,9 @@ public final class CourseController {
                         List.of(
                                 new Filter("semester.id", FilterOperator.EQUAL, semesterId.toString()),
                                 new Filter("semester.user.id", FilterOperator.EQUAL, user.getId().toString()),
-                                new Filter("name", FilterOperator.LIKE, name)),
-                        Order.none(),
+                                new Filter("name", FilterOperator.LIKE, name),
+                                Filter.of("id", FilterOperator.LIKE, id)),
+                        Order.of("id", OrderType.DESC),
                         limit,
                         page));
 

@@ -27,13 +27,20 @@
         <h:form>
           <p:inputText
             id="search"
-            value="#{homeView.searchName}"
+            value="#{homeView.searchValue}"
             placeholder="#{msg['home.action.search.placeholder']}"
           />
+          <p:selectOneMenu value="#{homeView.criteria}" class="criteria">
+            <f:selectItem itemLabel="Id" itemValue="id" />
+            <f:selectItem
+              itemLabel="#{msg['home.action.search.criteria.name']}"
+              itemValue="name"
+            />
+          </p:selectOneMenu>
           <p:commandButton
             value="#{msg['home.action.search.button']}"
             actionListener="#{homeView.search}"
-            update="semesterTable"
+            update="messages search semesterTable"
           />
           <p:commandButton
             value="#{msg['home.action.create.button']}"
@@ -128,8 +135,8 @@
         <p:commandButton
           value="#{msg['home.dialog.create.submit']}"
           actionListener="#{homeView.create}"
-          update="semesterTable"
-          oncomplete="PF('createDialog').hide()"
+          update="messages semesterTable"
+          oncomplete="if (!args.validationFailed) PF('createDialog').hide()"
         />
       </h:form>
     </p:dialog>
@@ -157,12 +164,14 @@
         <p:commandButton
           value="#{msg['home.dialog.update.submit']}"
           actionListener="#{homeView.update}"
-          update="semesterTable"
-          oncomplete="PF('updateDialog').hide()"
+          update="messages semesterTable"
+          oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
         />
       </h:form>
     </p:dialog>
 
     <ui:include src="/components/organisms/footer.xhtml" />
+
+    <p:growl id="messages" showDetail="true" />
   </h:body>
 </html>

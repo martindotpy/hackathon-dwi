@@ -20,20 +20,35 @@
     <ui:include src="/components/organisms/header.xhtml" />
 
     <main class="main-search-table">
-      <h1>#{msg['course.header']}</h1>
+      <div class="header-main">
+        <p:commandButton
+          action="#{courseView.back}"
+          icon="pi pi-arrow-left"
+          class="back"
+        />
+
+        <h1>#{msg['course.header']}</h1>
+      </div>
 
       <!-- View actions -->
       <div class="actions">
         <h:form>
           <p:inputText
             id="search"
-            value="#{courseView.searchName}"
+            value="#{courseView.searchValue}"
             placeholder="#{msg['course.action.search.placeholder']}"
           />
+          <p:selectOneMenu value="#{courseView.criteria}" class="criteria">
+            <f:selectItem itemLabel="Id" itemValue="id" />
+            <f:selectItem
+              itemLabel="#{msg['course.action.search.criteria.name']}"
+              itemValue="name"
+            />
+          </p:selectOneMenu>
           <p:commandButton
             value="#{msg['course.action.search.button']}"
             actionListener="#{courseView.search}"
-            update="courseTable"
+            update="messages search courseTable"
           />
           <p:commandButton
             value="#{msg['course.action.create.button']}"
@@ -88,6 +103,7 @@
               class="ui-button ui-widget ui-state-default ui-corner-all action details"
             >
               <f:param name="course_id" value="#{course.id}" />
+              <f:param name="semester_id" value="#{courseView.semesterId}" />
             </p:link>
 
             <!-- Update course -->
@@ -137,8 +153,8 @@
         <p:commandButton
           value="#{msg['course.dialog.create.submit']}"
           actionListener="#{courseView.create}"
-          update="courseTable"
-          oncomplete="PF('createDialog').hide()"
+          update="messages courseTable"
+          oncomplete="if (!args.validationFailed) PF('createDialog').hide()"
         />
       </h:form>
     </p:dialog>
@@ -166,12 +182,14 @@
         <p:commandButton
           value="#{msg['course.dialog.update.submit']}"
           actionListener="#{courseView.update}"
-          update="courseTable"
-          oncomplete="PF('updateDialog').hide()"
+          update="message courseTable"
+          oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
         />
       </h:form>
     </p:dialog>
 
     <ui:include src="/components/organisms/footer.xhtml" />
+
+    <p:growl id="messages" showDetail="true" />
   </h:body>
 </html>

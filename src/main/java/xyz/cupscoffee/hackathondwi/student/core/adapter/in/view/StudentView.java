@@ -49,6 +49,22 @@ public final class StudentView {
         studentLazyDataModel = new StudentLazyDataModel();
     }
 
+    // Return to previous page or home
+    @Getter
+    @Setter
+    private String semesterId;
+
+    public void back() {
+        try {
+            Integer.parseInt(semesterId);
+        } catch (NumberFormatException e) {
+            FaceShortcuts.redirect("/home.xhtml");
+            return;
+        }
+
+        FaceShortcuts.redirect("/course.xhtml?semester_id=" + semesterId);
+    }
+
     // Table view
     @Getter
     @Setter
@@ -73,7 +89,13 @@ public final class StudentView {
         String endpoint = String.format("/student?course_id=%d&page=%d&size=%d", courseId, page + 1, size);
         String value = searchValue.trim();
 
-        if (criteria.equals("id")) {
+        if (criteria.equals("id") && StringUtils.hasText(value)) {
+            try {
+                Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                FaceShortcuts.showFailureMessage("home.action.search.criteria.id.failure", "Id can only be a number");
+            }
+
             value = value.replaceAll("[^\\d]", "");
             searchValue = value;
         }

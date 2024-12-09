@@ -49,6 +49,11 @@ public final class CourseView {
         courseLazyDataModel = new CourseLazyDataModel();
     }
 
+    // Return to home
+    public void back() {
+        FaceShortcuts.redirect("/home.xhtml");
+    }
+
     // Table view
     @Getter
     @Setter
@@ -64,14 +69,28 @@ public final class CourseView {
     private Long semesterId;
     @Getter
     @Setter
-    private String searchName = "";
+    private String criteria = "id";
+    @Getter
+    @Setter
+    private String searchValue = "";
 
     public boolean loadCourses() {
         String endpoint = String.format("/course?semester_id=%d&page=%d&size=%d", semesterId, page + 1, size);
-        String name = searchName.trim();
+        String value = searchValue.trim();
 
-        if (StringUtils.hasText(name)) {
-            endpoint += "&name=" + name;
+        if (criteria.equals("id") && StringUtils.hasText(value)) {
+            try {
+                Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                FaceShortcuts.showFailureMessage("home.action.search.criteria.id.failure", "Id can only be a number");
+            }
+
+            value = value.replaceAll("[^\\d]", "");
+            searchValue = value;
+        }
+
+        if (StringUtils.hasText(value)) {
+            endpoint += "&" + criteria + "=" + value;
         }
 
         var response = restClient.get(endpoint, PaginatedCourseResponse.class);

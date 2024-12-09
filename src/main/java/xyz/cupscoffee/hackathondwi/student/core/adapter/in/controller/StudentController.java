@@ -34,6 +34,7 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Criteria;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Filter;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.FilterOperator;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Order;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.OrderType;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.SimpleValidation;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
 import xyz.cupscoffee.hackathondwi.student.core.adapter.in.request.CreateStudentRequest;
@@ -105,7 +106,7 @@ public final class StudentController {
                                 Filter.of("lastName", FilterOperator.LIKE, lastName),
                                 Filter.of("code", FilterOperator.LIKE, code),
                                 Filter.of("id", FilterOperator.LIKE, id)),
-                        Order.none(),
+                        Order.of("id", OrderType.DESC),
                         limit,
                         page));
 

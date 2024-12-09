@@ -21,6 +21,7 @@ import xyz.cupscoffee.hackathondwi.semester.core.adapter.in.response.PaginatedSe
 import xyz.cupscoffee.hackathondwi.semester.core.adapter.in.response.SemesterContentResponse;
 import xyz.cupscoffee.hackathondwi.semester.core.application.dto.SemesterDto;
 import xyz.cupscoffee.hackathondwi.semester.core.domain.query.payload.UpdateSemesterPayload;
+import xyz.cupscoffee.hackathondwi.shared.adapter.in.util.FaceShortcuts;
 
 @Slf4j
 @ViewScoped
@@ -49,16 +50,29 @@ public class HomeView {
     // Search
     @Getter
     @Setter
-    private String searchName = "";
+    private String criteria = "id";
+    @Getter
+    @Setter
+    private String searchValue = "";
 
     public void loadSemesters() {
         String endpoint = String.format("/semester?page=%d&size=%d", page + 1, size);
-        String name = searchName.trim();
+        String value = searchValue.trim();
 
-        if (StringUtils.hasText(name)) {
-            endpoint += "&name=" + name;
+        if (criteria.equals("id") && StringUtils.hasText(value)) {
+            try {
+                Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                FaceShortcuts.showFailureMessage("home.action.search.criteria.id.failure", "Id can only be a number");
+            }
+
+            value = value.replaceAll("[^\\d]", "");
+            searchValue = value;
         }
 
+        if (StringUtils.hasText(value)) {
+            endpoint += "&" + criteria + "=" + value;
+        }
         var response = restClient.get(endpoint, PaginatedSemesterResponse.class);
 
         if (response.getStatus() == 200) {
