@@ -14,30 +14,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <ui:include src="/components/atoms/font.xhtml" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
-    <title>#{msg['course.title']}</title>
+    <title>#{msg['student.title']}</title>
   </h:head>
   <h:body>
     <ui:include src="/components/organisms/header.xhtml" />
 
     <main class="main-search-table">
-      <h1>#{msg['course.header']}</h1>
+      <div>
+        <h1>#{msg['student.header']}</h1>
+      </div>
 
       <!-- View actions -->
       <div class="actions">
         <h:form>
           <p:inputText
             id="search"
-            value="#{courseView.searchName}"
-            placeholder="#{msg['course.action.search.placeholder']}"
+            value="#{studentView.searchValue}"
+            placeholder="#{msg['student.action.search.placeholder']}"
+          />
+          <p:selectOneMenu value="#{studentView.criteria}" class="criteria">
+            <f:selectItem itemLabel="Id" itemValue="id" />
+            <f:selectItem
+              itemLabel="#{msg['student.action.search.criteria.code']}"
+              itemValue="code"
+            />
+            <f:selectItem
+              itemLabel="#{msg['student.action.search.criteria.first-name']}"
+              itemValue="first_name"
+            />
+            <f:selectItem
+              itemLabel="#{msg['student.action.search.criteria.last-name']}"
+              itemValue="last_name"
+            />
+          </p:selectOneMenu>
+          <p:commandButton
+            value="#{msg['student.action.search.button']}"
+            actionListener="#{studentView.search}"
+            update="search studentTable"
           />
           <p:commandButton
-            value="#{msg['course.action.search.button']}"
-            actionListener="#{courseView.search}"
-            update="courseTable"
-          />
-          <p:commandButton
-            value="#{msg['course.action.create.button']}"
-            update="courseTable"
+            value="#{msg['student.action.create.button']}"
+            update="studentTable"
             icon="pi pi-plus"
             oncomplete="PF('createDialog').show()"
           />
@@ -46,57 +63,60 @@
 
       <!-- Data -->
       <p:dataTable
-        id="courseTable"
-        var="course"
-        value="#{courseView.courseLazyDataModel}"
+        id="studentTable"
+        var="student"
+        value="#{studentView.studentLazyDataModel}"
         paginator="true"
-        rows="#{courseView.courses.size}"
+        rows="#{studentView.students.size}"
         dynamic="true"
         lazy="true"
         currentPageReportTemplate="Página {currentPage} de {totalPages}"
         paginatorPosition="bottom"
       >
         <p:column headerText="Id" style="width: 10%">
-          <h:outputText value="#{course.id}" />
+          <h:outputText value="#{student.id}" />
         </p:column>
 
         <p:column
-          headerText="#{msg['course.table.column.name']}"
-          style="width: 45%"
+          headerText="#{msg['student.table.column.code']}"
+          style="width: 20%"
         >
-          <h:outputText value="#{course.name}" />
+          <h:outputText value="#{student.code}" />
+        </p:column>
+        <p:column
+          headerText="#{msg['student.table.column.first-name']}"
+          style="width: 20%"
+        >
+          <h:outputText value="#{student.firstName}" />
+        </p:column>
+        <p:column
+          headerText="#{msg['student.table.column.last-name']}"
+          style="width: 20%"
+        >
+          <h:outputText value="#{student.lastName}" />
         </p:column>
 
         <p:column
-          headerText="#{msg['course.table.column.actions']}"
-          style="width: 55%"
+          headerText="#{msg['student.table.column.actions']}"
+          style="width: 40%"
         >
           <div class="table-actions">
-            <!-- Exam -->
-            <p:link
-              value="#{msg['course.table.action.exam']}"
-              outcome="/exam.xhtml"
-              class="ui-button ui-widget ui-state-default ui-corner-all action details"
-            >
-              <f:param name="course_id" value="#{course.id}" />
-            </p:link>
-
-            <!-- Update course -->
+            <!-- Update student -->
             <p:commandButton
-              value="#{msg['course.table.action.update']}"
+              value="#{msg['student.table.action.update']}"
               icon="pi pi-pencil"
-              actionListener="#{courseView.prepareUpdate(course)}"
+              actionListener="#{studentView.prepareUpdate(student)}"
               class="action update"
               update=":updateDialog"
               oncomplete="PF('updateDialog').show()"
             />
 
-            <!-- Delete course -->
+            <!-- Delete student -->
             <p:commandButton
-              value="#{msg['course.table.action.delete']}"
+              value="#{msg['student.table.action.delete']}"
               icon="pi pi-trash"
-              actionListener="#{courseView.delete(course.id)}"
-              update="courseTable"
+              actionListener="#{studentView.delete(student.id)}"
+              update="studentTable"
               class="action delete"
             />
           </div>
@@ -104,61 +124,97 @@
       </p:dataTable>
     </main>
 
-    <!-- Create course dialog -->
+    <!-- Create student dialog -->
     <p:dialog
       id="createDialog"
       class="dialog"
-      header="#{msg['course.dialog.create.title']}"
+      header="#{msg['student.dialog.create.title']}"
       widgetVar="createDialog"
       modal="true"
       resizable="false"
       draggable="false"
     >
       <h:form>
-        <h:outputLabel value="#{msg['course.dialog.create.name.label']}">
+        <h:outputLabel value="#{msg['student.dialog.create.code.label']}">
           <p:inputText
-            id="createName"
-            value="#{courseView.createCourseName}"
-            placeholder="#{msg['course.dialog.create.name.placeholder']}"
+            id="createCode"
+            value="#{studentView.createStudentCode}"
+            placeholder="#{msg['student.dialog.create.code.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['student.dialog.create.code.required']}"
+          />
+        </h:outputLabel>
+        <h:message for="createCode" />
+        <h:outputLabel value="#{msg['student.dialog.create.first-name.label']}">
+          <p:inputText
+            id="createFirstName"
+            value="#{studentView.createStudentFirstName}"
+            placeholder="#{msg['student.dialog.create.first-name.placeholder']}"
+          />
+        </h:outputLabel>
+        <h:outputLabel value="#{msg['student.dialog.create.last-name.label']}">
+          <p:inputText
+            id="createLastName"
+            value="#{studentView.createStudentLastName}"
+            placeholder="#{msg['student.dialog.create.last-name.placeholder']}"
           />
         </h:outputLabel>
 
         <p:commandButton
-          value="#{msg['course.dialog.create.submit']}"
-          actionListener="#{courseView.create}"
-          update="courseTable"
-          oncomplete="PF('createDialog').hide()"
+          value="#{msg['student.dialog.create.submit']}"
+          actionListener="#{studentView.create}"
+          update="messages studentTable"
+          oncomplete="if (!args.validationFailed) PF('createDialog').hide()"
         />
       </h:form>
     </p:dialog>
 
-    <!-- Update course dialog -->
+    <!-- Update student dialog -->
     <p:dialog
       id="updateDialog"
       class="dialog"
-      header="#{msg['course.dialog.update.title']}"
+      header="#{msg['student.dialog.update.title']}"
       widgetVar="updateDialog"
       modal="true"
       resizable="false"
       draggable="false"
     >
       <h:form>
-        <h:outputLabel value="#{msg['course.dialog.update.name.label']}">
+        <h:outputLabel value="#{msg['student.dialog.update.code.label']}">
           <p:inputText
-            id="updatedName"
-            value="#{courseView.updatedCourseName}"
-            placeholder="#{msg['course.dialog.update.name.placeholder']}"
+            id="updatedCode"
+            value="#{studentView.updatedStudentCode}"
+            placeholder="#{msg['student.dialog.update.code.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['student.dialog.update.code.required']}"
           />
         </h:outputLabel>
+        <h:outputLabel value="#{msg['student.dialog.update.first-name.label']}">
+          <p:inputText
+            id="updateFirstName"
+            value="#{studentView.updatedStudentFirstName}"
+            placeholder="#{msg['student.dialog.update.first-name.placeholder']}"
+          />
+        </h:outputLabel>
+        <h:outputLabel value="#{msg['student.dialog.update.last-name.label']}">
+          <p:inputText
+            id="updateLastName"
+            value="#{studentView.updatedStudentLastName}"
+            placeholder="#{msg['student.dialog.update.last-name.placeholder']}"
+          />
+        </h:outputLabel>
+
         <p:commandButton
-          value="#{msg['course.dialog.update.submit']}"
-          actionListener="#{courseView.update}"
-          update="courseTable"
-          oncomplete="PF('updateDialog').hide()"
+          value="#{msg['student.dialog.update.submit']}"
+          actionListener="#{studentView.update}"
+          oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
+          update="messages studentTable"
         />
       </h:form>
     </p:dialog>
 
     <ui:include src="/components/organisms/footer.xhtml" />
+
+    <p:growl id="messages" showDetail="true" />
   </h:body>
 </html>

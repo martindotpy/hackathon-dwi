@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import xyz.cupscoffee.hackathondwi.semester.core.application.port.in.FindSemesterPort;
 import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.request.CreateCourseRequest;
 import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.request.UpdateCourseRequest;
 import xyz.cupscoffee.hackathondwi.semester.course.adapter.in.response.CourseContentResponse;
@@ -53,6 +54,7 @@ import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 public final class CourseController {
     private final CreateCoursePort createCoursePort;
     private final FindCoursePort findCoursePort;
+    private final FindSemesterPort findSemesterPort;
     private final UpdateCoursePort updateCoursePort;
     private final DeleteCoursePort deleteCoursePort;
 
@@ -65,6 +67,7 @@ public final class CourseController {
     @Operation(summary = "Get all courses", description = "Get all courses by criteria", responses = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved courses", content = @Content(schema = @Schema(implementation = PaginatedCourseResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Semester not found", content = @Content(schema = @Schema(implementation = FailureResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @GetMapping
@@ -97,6 +100,16 @@ public final class CourseController {
 
         if (!violations.isEmpty()) {
             return toDetailedFailureResponse(violations);
+        }
+
+        // Verify if the user is the owner of the semester
+        var semesterResult = findSemesterPort.matchOne(
+                Criteria.ofMatchOne(
+                        Filter.of("id", FilterOperator.EQUAL, semesterId),
+                        Filter.of("user.id", FilterOperator.EQUAL, user.getId().toString())));
+
+        if (semesterResult.isFailure()) {
+            return toFailureResponse(semesterResult.getFailure());
         }
 
         var courses = findCoursePort.match(

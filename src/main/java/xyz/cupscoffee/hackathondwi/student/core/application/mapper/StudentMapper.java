@@ -42,7 +42,6 @@ public interface StudentMapper {
      * @param domain the domain model to map
      * @return the entity
      */
-    @Mapping(target = "courses", ignore = true)
     StudentEntity toEntity(Student domain);
 
     /**
@@ -59,5 +58,6 @@ public interface StudentMapper {
      * @param dto the DTO to map
      * @return the domain model
      */
+    @Mapping(target = "courses", ignore = true)
     Student toDomain(StudentDto dto);
 }

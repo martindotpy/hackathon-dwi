@@ -41,7 +41,11 @@ public final class CourseView {
             return;
         }
 
-        loadCourses();
+        if (!loadCourses()) {
+            FaceShortcuts.redirect("/home.xhtml");
+            return;
+        }
+
         courseLazyDataModel = new CourseLazyDataModel();
     }
 
@@ -62,7 +66,7 @@ public final class CourseView {
     @Setter
     private String searchName = "";
 
-    public void loadCourses() {
+    public boolean loadCourses() {
         String endpoint = String.format("/course?semester_id=%d&page=%d&size=%d", semesterId, page + 1, size);
         String name = searchName.trim();
 
@@ -74,9 +78,10 @@ public final class CourseView {
 
         if (response.getStatus() == 200) {
             this.courses = (PaginatedCourseResponse) response.getBody();
-        } else {
-            this.courses = null;
+            return true;
         }
+
+        return false;
     }
 
     public void search() {

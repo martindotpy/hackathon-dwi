@@ -61,7 +61,7 @@ public final class CreateStudentUseCase implements CreateStudentPort {
         Student newStudent = Student.builder()
                 .firstName(payload.getFirstName())
                 .lastName(payload.getLastName())
-                .code(payload.getCode())
+                .code(payload.getCode().toUpperCase())
                 .courses(new CopyOnWriteArrayList<>(List.of(course)))
                 .build();
 

@@ -100,6 +100,14 @@ public class RestClient {
 
             return RestResponse.of(200, restTemplate.getForObject(baseUrl + path, responseType));
         } catch (RestClientException e) {
+            if (e.getMostSpecificCause() instanceof HttpClientErrorException.NotFound notFound) {
+                log.info("Error while making GET request: status `{}` - body `{}`",
+                        ansi().fgRed().a(notFound.getStatusCode()).reset(),
+                        ansi().fgRed().a(notFound.getResponseBodyAsString()).reset());
+
+                return RestResponse.of(404, notFound.getResponseBodyAsString());
+            }
+
             log.error("Error while making GET request", e);
 
             return RestResponse.of(500);

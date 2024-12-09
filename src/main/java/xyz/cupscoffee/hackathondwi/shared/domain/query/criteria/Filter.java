@@ -36,7 +36,7 @@ public final class Filter {
      * @return The filter
      */
     public static Filter of(String field, FilterOperator operator, Long value) {
-        return new Filter(field, operator, String.valueOf(value));
+        return new Filter(field, operator, toString(value));
     }
 
     /**
@@ -48,7 +48,7 @@ public final class Filter {
      * @return
      */
     public static Filter of(String field, FilterOperator operator, Integer value) {
-        return new Filter(field, operator, String.valueOf(value));
+        return new Filter(field, operator, toString(value));
     }
 
     /**
@@ -60,7 +60,7 @@ public final class Filter {
      * @return
      */
     public static Filter of(String field, FilterOperator operator, Double value) {
-        return new Filter(field, operator, String.valueOf(value));
+        return new Filter(field, operator, toString(value));
     }
 
     /**
@@ -72,6 +72,10 @@ public final class Filter {
      * @return The filter
      */
     public static Filter of(String field, FilterOperator operator, Boolean value) {
-        return new Filter(field, operator, String.valueOf(value));
+        return new Filter(field, operator, toString(value));
+    }
+
+    private static String toString(Object value) {
+        return value == null ? null : value.toString();
     }
 }

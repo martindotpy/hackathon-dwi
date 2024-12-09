@@ -71,9 +71,10 @@ public final class StudentController {
     public ResponseEntity<?> getAllByCriteria(
             @RequestParam(defaultValue = "10") @Parameter(description = "Limit (max 10)") Integer limit,
             @RequestParam(defaultValue = "1") @Parameter(description = "Page (min 1)") Integer page,
-            @RequestParam(required = false) @Parameter(description = "First name of the student") String firstName,
-            @RequestParam(required = false) @Parameter(description = "Last name of the student") String lastName,
+            @RequestParam(name = "first_name", required = false) @Parameter(description = "First name of the student") String firstName,
+            @RequestParam(name = "last_name", required = false) @Parameter(description = "Last name of the student") String lastName,
             @RequestParam(required = false) @Parameter(description = "Code of the student") String code,
+            @RequestParam(required = false) @Parameter(description = "Id of the student") Long id,
             @AuthenticationPrincipal User user) {
         var violations = new CopyOnWriteArrayList<ValidationError>();
 
@@ -99,10 +100,11 @@ public final class StudentController {
         var students = findStudentPort.match(
                 new Criteria(
                         List.of(
-                                new Filter("courses.semester.user.id", FilterOperator.EQUAL, user.getId().toString()),
-                                new Filter("firstName", FilterOperator.LIKE, firstName),
-                                new Filter("lastName", FilterOperator.LIKE, lastName),
-                                new Filter("code", FilterOperator.LIKE, code)),
+                                Filter.of("courses.semester.user.id", FilterOperator.EQUAL, user.getId().toString()),
+                                Filter.of("firstName", FilterOperator.LIKE, firstName),
+                                Filter.of("lastName", FilterOperator.LIKE, lastName),
+                                Filter.of("code", FilterOperator.LIKE, code),
+                                Filter.of("id", FilterOperator.LIKE, id)),
                         Order.none(),
                         limit,
                         page));

@@ -70,7 +70,10 @@ public final class FaceShortcuts {
     private static FacesMessage getFacesMessage(
             Severity severity,
             String code, String defaultMessage) {
-        String message = MessagesShortcuts.getMessage(code, defaultMessage);
+        String message = MessagesShortcuts.getMessage(
+                code,
+                defaultMessage,
+                FacesContext.getCurrentInstance().getViewRoot().getLocale());
 
         return new FacesMessage(severity, message, null);
     }

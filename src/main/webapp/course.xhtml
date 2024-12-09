@@ -129,6 +129,8 @@
             id="createName"
             value="#{courseView.createCourseName}"
             placeholder="#{msg['course.dialog.create.name.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['course.dialog.create.name.required']}"
           />
         </h:outputLabel>
 
@@ -157,6 +159,8 @@
             id="updatedName"
             value="#{courseView.updatedCourseName}"
             placeholder="#{msg['course.dialog.update.name.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['course.dialog.update.name.required']}"
           />
         </h:outputLabel>
         <p:commandButton

@@ -120,6 +120,8 @@
             id="createName"
             value="#{homeView.createSemesterName}"
             placeholder="#{msg['home.dialog.create.name.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['home.dialog.create.name.required']}"
           />
         </h:outputLabel>
 
@@ -148,6 +150,8 @@
             id="updatedName"
             value="#{homeView.updatedSemesterName}"
             placeholder="#{msg['home.dialog.update.name.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['home.dialog.update.name.required']}"
           />
         </h:outputLabel>
         <p:commandButton
