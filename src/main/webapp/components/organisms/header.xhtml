@@ -9,8 +9,8 @@
   <header>
     <h:outputText value="Hackathon DWI" class="header-title" />
 
-    <!-- Language Switcher -->
     <div class="right-header">
+      <!-- Language Switcher -->
       <h:form>
         <p:selectOneMenu value="#{localeBean.language}" style="width: 150px">
           <f:selectItem itemLabel="English" itemValue="en" />
@@ -18,6 +18,8 @@
           <p:ajax event="change" update="@all" />
         </p:selectOneMenu>
       </h:form>
+
+      <!-- User view -->
       <c:if test="#{not empty loginView.user}">
         <div class="header-username-container">
           <span class="user-icon pi pi-user"></span>
@@ -28,7 +30,7 @@
         </div>
         <h:form>
           <p:commandButton
-            value="Logout"
+            value="#{msg['login.logout']}"
             action="#{loginView.logout}"
             class="logout"
             icon="pi pi-sign-out"

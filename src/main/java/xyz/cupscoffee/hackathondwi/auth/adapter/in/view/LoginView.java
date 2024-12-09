@@ -94,6 +94,11 @@ public class LoginView {
 
         for (Object obj : facesContext.getExternalContext().getRequestCookieMap().values()) {
             Cookie cookie = (Cookie) obj;
+
+            if (cookie.getName().endsWith("LOCALE")) {
+                continue;
+            }
+
             cookie.setMaxAge(0);
             cookie.setPath("/");
             httpResponse.addCookie(cookie);
