@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html
+  lang="es"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  xmlns:c="http://java.sun.com/jstl/core"
+>
+  <f:metadata>
+    <f:viewParam name="semester_id" value="#{statsView.semesterId}" />
+    <f:viewParam name="course_id" value="#{statsView.courseId}" />
+    <f:viewParam name="exam_id" value="#{statsView.examId}" />
+  </f:metadata>
+  <h:head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <ui:include src="/components/atoms/font.xhtml" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <title>#{msg['stats.title']}</title>
+  </h:head>
+  <h:body>
+    <ui:include src="/components/organisms/header.xhtml" />
+
+    <main class="main-search-table">
+      <div class="header-main">
+        <p:commandButton
+          action="#{statsView.back}"
+          icon="pi pi-arrow-left"
+          class="back"
+        />
+
+        <h1>#{msg['stats.header']}</h1>
+      </div>
+
+      <div class="chart-container">
+        <h2>#{msg['stats.passed-failure-chart.header']}</h2>
+        <p:pieChart model="#{statsView.passedFailedPieModel}" />
+      </div>
+
+      <div class="chart-container">
+        <h2>#{msg['stats.scores.header']}</h2>
+        <p:barChart model="#{statsView.scoresBarModel}" />
+      </div>
+
+      <div class="chart-container">
+        <table class="podium">
+          <thead>
+            <tr>
+              <th>#{msg['stats.three-positions.header']}</th>
+              <th>#{msg['stats.three-positions.codes']}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1°</td>
+              <td>
+                <ui:repeat
+                  value="#{statsView.stats.threePositions.firstPositionCodes}"
+                  var="student"
+                >
+                  #{student.code}<br />
+                </ui:repeat>
+              </td>
+            </tr>
+            <tr>
+              <td>2°</td>
+              <td>
+                <ui:repeat
+                  value="#{statsView.stats.threePositions.secondPositionCodes}"
+                  var="student"
+                >
+                  #{student.code}<br />
+                </ui:repeat>
+              </td>
+            </tr>
+            <tr>
+              <td>3°</td>
+              <td>
+                <ui:repeat
+                  value="#{statsView.stats.threePositions.thirdPositionCodes}"
+                  var="student"
+                >
+                  #{student.code}<br />
+                </ui:repeat>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-container">
+        <h2>#{msg['stats.scores-by-question.header']}</h2>
+        <p:barChart model="#{statsView.scoresByQuestionModel}" />
+      </div>
+    </main>
+
+    <ui:include src="/components/organisms/footer.xhtml" />
+  </h:body>
+</html>
