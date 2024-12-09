@@ -46,6 +46,8 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Order;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.OrderType;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.SimpleValidation;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
+import xyz.cupscoffee.hackathondwi.student.core.adapter.in.response.StudentsContentResponse;
+import xyz.cupscoffee.hackathondwi.student.core.application.port.in.FindStudentPort;
 import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 
 @Tag(name = "Course", description = "Course")
@@ -56,6 +58,7 @@ public final class CourseController {
     private final CreateCoursePort createCoursePort;
     private final FindCoursePort findCoursePort;
     private final FindSemesterPort findSemesterPort;
+    private final FindStudentPort findStudentPort;
     private final UpdateCoursePort updateCoursePort;
     private final DeleteCoursePort deleteCoursePort;
 
@@ -172,6 +175,27 @@ public final class CourseController {
                 result.getSuccess(),
                 "course.get.success",
                 "Course retrieved successfully");
+    }
+
+    /**
+     * Get all students by course id.
+     *
+     * @param id course id.
+     * @return all students
+     */
+    @Operation(summary = "Get all students by course id", description = "Get all students by course id", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved students", content = @Content(schema = @Schema(implementation = StudentsContentResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = DetailedFailureResponse.class))),
+    })
+    @GetMapping("/{id}/student")
+    public ResponseEntity<?> getAllStudentsByCourseId(@PathVariable Long id) {
+        var students = findStudentPort.findAllByCourseId(id);
+
+        return toOkResponse(
+                StudentsContentResponse.class,
+                students,
+                "course.get.all.students.success",
+                "Students retrieved successfully");
     }
 
     /**

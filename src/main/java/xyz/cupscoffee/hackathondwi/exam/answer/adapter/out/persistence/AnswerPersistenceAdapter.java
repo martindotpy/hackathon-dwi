@@ -99,4 +99,12 @@ public final class AnswerPersistenceAdapter implements AnswerRepository {
 
         return Result.ok(answer.get());
     }
+
+    @Override
+    public List<Answer> findAllByExamIdAndStudentId(Long examId, Long studentId) {
+        return springAnswerRepository.findAllByQuestionExamIdAndStudentId(examId, studentId)
+                .stream()
+                .map(answerMapper::toDomain)
+                .toList();
+    }
 }

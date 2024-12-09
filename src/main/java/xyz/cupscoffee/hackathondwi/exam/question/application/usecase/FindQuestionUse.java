@@ -2,6 +2,8 @@ package xyz.cupscoffee.hackathondwi.exam.question.application.usecase;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.exam.question.application.dto.QuestionDto;
@@ -53,5 +55,18 @@ public final class FindQuestionUse implements FindQuestionPort {
                 ansi().fgBrightBlue().a(result.getSuccess().getId()).reset());
 
         return Result.ok(questionMapper.toDto(result.getSuccess()));
+    }
+
+    @Override
+    public List<QuestionDto> findAllByExamId(Long examId) {
+        var questions = questionRepository.findAllByExamId(examId);
+
+        log.info("Found {} questions for exam with id {}",
+                ansi().fgBrightBlue().a(questions.size()).reset(),
+                ansi().fgBrightBlue().a(examId).reset());
+
+        return questions.stream()
+                .map(questionMapper::toDto)
+                .toList();
     }
 }

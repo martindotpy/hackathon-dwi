@@ -27,6 +27,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import xyz.cupscoffee.hackathondwi.exam.answer.adapter.in.response.AnswersContentResponse;
+import xyz.cupscoffee.hackathondwi.exam.answer.application.port.in.FindAnswerPort;
 import xyz.cupscoffee.hackathondwi.exam.core.adapter.in.request.CreateExamRequest;
 import xyz.cupscoffee.hackathondwi.exam.core.adapter.in.request.UpdateExamRequest;
 import xyz.cupscoffee.hackathondwi.exam.core.adapter.in.response.ExamContentResponse;
@@ -35,6 +37,8 @@ import xyz.cupscoffee.hackathondwi.exam.core.application.port.in.CreateExamPort;
 import xyz.cupscoffee.hackathondwi.exam.core.application.port.in.DeleteExamPort;
 import xyz.cupscoffee.hackathondwi.exam.core.application.port.in.FindExamPort;
 import xyz.cupscoffee.hackathondwi.exam.core.application.port.in.UpdateExamPort;
+import xyz.cupscoffee.hackathondwi.exam.question.adapter.in.response.QuestionsContentResponse;
+import xyz.cupscoffee.hackathondwi.exam.question.application.port.in.FindQuestionPort;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.RestControllerAdapter;
 import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureResponse;
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
@@ -54,6 +58,8 @@ import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
 public final class ExamController {
     private final CreateExamPort createExamPort;
     private final FindExamPort findExamPort;
+    private final FindQuestionPort findQuestionPort;
+    private final FindAnswerPort findAnswerPort;
     private final UpdateExamPort updateExamPort;
     private final DeleteExamPort deleteExamPort;
 
@@ -158,6 +164,47 @@ public final class ExamController {
                 ExamContentResponse.class,
                 result.getSuccess(),
                 "exam.get.success",
+                "Exam retrieved successfully");
+    }
+
+    /**
+     * Get questions by exam id.
+     *
+     * @param id exam id.
+     * @return questions
+     */
+    @Operation(summary = "Get questions by exam id", description = "Get questions by exam id", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved questions", content = @Content(schema = @Schema(implementation = QuestionsContentResponse.class))),
+    })
+    @GetMapping("/{id}/question")
+    public ResponseEntity<?> getQuestionsByExamId(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        var questions = findQuestionPort.findAllByExamId(id);
+
+        return toOkResponse(
+                QuestionsContentResponse.class,
+                questions,
+                "exam.get.question.success",
+                "Exam retrieved successfully");
+    }
+
+    /**
+     * Get answers by exam id and student id.
+     *
+     * @param examId    exam id.
+     * @param studentId student id.
+     * @return
+     */
+    @Operation(summary = "Get answers by exam id and student id", description = "Get answers by exam id and student id", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved answers", content = @Content(schema = @Schema(implementation = QuestionsContentResponse.class))),
+    })
+    @GetMapping("/{examId}/student/{studentId}/answer")
+    public ResponseEntity<?> getAnswersByExamIdAndStudentId(@PathVariable Long examId, @PathVariable Long studentId) {
+        var answers = findAnswerPort.findAllByExamIdAndStudentId(examId, studentId);
+
+        return toOkResponse(
+                AnswersContentResponse.class,
+                answers,
+                "exam.get.answer.success",
                 "Exam retrieved successfully");
     }
 

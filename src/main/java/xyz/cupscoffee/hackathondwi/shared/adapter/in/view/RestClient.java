@@ -159,7 +159,27 @@ public class RestClient {
 
         log.info("Making PUT request to `{}`", ansi().fgYellow().a(baseUrl + path).reset());
 
-        restTemplate.put(baseUrl + path, request);
+        try {
+            restTemplate.put(baseUrl + path, request);
+        } catch (RestClientException e) {
+            if (e.getMostSpecificCause() instanceof HttpClientErrorException.NotFound notFound) {
+                log.info("Error while making PUT request: status `{}` - body `{}`",
+                        ansi().fgRed().a(notFound.getStatusCode()).reset(),
+                        ansi().fgRed().a(notFound.getResponseBodyAsString()).reset());
+
+                return RestResponse.of(404, notFound.getResponseBodyAsString());
+            } else if (e.getMostSpecificCause() instanceof HttpClientErrorException.BadRequest badRequest) {
+                log.info("Error while making PUT request: status `{}` - body `{}`",
+                        ansi().fgRed().a(badRequest.getStatusCode()).reset(),
+                        ansi().fgRed().a(badRequest.getResponseBodyAsString()).reset());
+
+                return RestResponse.of(400, badRequest.getResponseBodyAsString());
+            } else {
+                log.error("Error while making PUT request", e);
+
+                return RestResponse.of(500);
+            }
+        }
 
         return RestResponse.of(200);
     }

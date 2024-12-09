@@ -2,6 +2,8 @@ package xyz.cupscoffee.hackathondwi.student.core.application.usecase;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.shared.adapter.annotations.UseCase;
@@ -53,5 +55,17 @@ public final class FindStudentUse implements FindStudentPort {
                 ansi().fgBrightBlue().a(result.getSuccess().getId()).reset());
 
         return Result.ok(studentMapper.toDto(result.getSuccess()));
+    }
+
+    @Override
+    public List<StudentDto> findAllByCourseId(Long courseId) {
+        var students = studentRepository.findAllByCoursesId(courseId);
+
+        log.info("Found {} students",
+                ansi().fgBrightBlue().a(students.size()).reset());
+
+        return students.stream()
+                .map(studentMapper::toDto)
+                .toList();
     }
 }

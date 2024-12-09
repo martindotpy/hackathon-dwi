@@ -72,7 +72,6 @@ public final class QuestionController {
             @RequestParam(name = "exam_id") @Parameter(description = "Exam id") Long examId,
             @RequestParam(defaultValue = "10") @Parameter(description = "Limit (max 10)") Integer limit,
             @RequestParam(defaultValue = "1") @Parameter(description = "Page (min 1)") Integer page,
-            @RequestParam(required = false) @Parameter(description = "Name of the question") String name,
             @AuthenticationPrincipal User user) {
         var violations = new CopyOnWriteArrayList<ValidationError>();
 
@@ -103,8 +102,8 @@ public final class QuestionController {
                 new Criteria(
                         List.of(
                                 new Filter("exam.id", FilterOperator.EQUAL, examId.toString()),
-                                new Filter("semester.exam.user.id", FilterOperator.EQUAL, user.getId().toString()),
-                                new Filter("name", FilterOperator.LIKE, name)),
+                                new Filter("exam.course.semester.user.id", FilterOperator.EQUAL,
+                                        user.getId().toString())),
                         Order.none(),
                         limit,
                         page));
@@ -145,7 +144,7 @@ public final class QuestionController {
         var result = findQuestionPort.matchOne(
                 Criteria.ofMatchOne(
                         new Filter("id", FilterOperator.EQUAL, id.toString()),
-                        new Filter("exam.user.id", FilterOperator.EQUAL, user.getId().toString())));
+                        new Filter("exam.course.semester.user.id", FilterOperator.EQUAL, user.getId().toString())));
 
         if (result.isFailure()) {
             return toFailureResponse(result.getFailure());

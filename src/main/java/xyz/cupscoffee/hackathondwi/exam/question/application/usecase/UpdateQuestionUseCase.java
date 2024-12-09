@@ -45,8 +45,11 @@ public final class UpdateQuestionUseCase implements UpdateQuestionPort {
 
         Question questionToUpdate = resultQuestion.getSuccess();
         Exam exam = questionToUpdate.getExam();
+        var questions = questionRepository.findAllByExamId(exam.getId()).stream()
+                .filter(q -> !q.getId().equals(questionToUpdate.getId()))
+                .toList();
         Integer maxValue = payload.getMaxValue();
-        Integer examMaxValue = exam.getQuestions().stream()
+        Integer examMaxValue = questions.stream()
                 .map(Question::getMaxValue)
                 .reduce(0, Integer::sum);
 
@@ -54,7 +57,7 @@ public final class UpdateQuestionUseCase implements UpdateQuestionPort {
             return Result.failure(QuestionFailure.CANNOT_OVERFLOW_MAX_VALUE);
         }
 
-        if (exam.getQuestions().stream().anyMatch(q -> q.getOrder().equals(payload.getOrder()))) {
+        if (questions.stream().anyMatch(q -> q.getOrder().equals(payload.getOrder()))) {
             return Result.failure(QuestionFailure.CANNOT_OVERLAP_ORDER);
         }
 

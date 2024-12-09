@@ -72,6 +72,7 @@ public final class StudentController {
     public ResponseEntity<?> getAllByCriteria(
             @RequestParam(defaultValue = "10") @Parameter(description = "Limit (max 10)") Integer limit,
             @RequestParam(defaultValue = "1") @Parameter(description = "Page (min 1)") Integer page,
+            @RequestParam(name = "course_id") @Parameter(description = "Course id") Long courseId,
             @RequestParam(name = "first_name", required = false) @Parameter(description = "First name of the student") String firstName,
             @RequestParam(name = "last_name", required = false) @Parameter(description = "Last name of the student") String lastName,
             @RequestParam(required = false) @Parameter(description = "Code of the student") String code,
@@ -102,6 +103,7 @@ public final class StudentController {
                 new Criteria(
                         List.of(
                                 Filter.of("courses.semester.user.id", FilterOperator.EQUAL, user.getId().toString()),
+                                Filter.of("courses.id", FilterOperator.EQUAL, courseId.toString()),
                                 Filter.of("firstName", FilterOperator.LIKE, firstName),
                                 Filter.of("lastName", FilterOperator.LIKE, lastName),
                                 Filter.of("code", FilterOperator.LIKE, code),

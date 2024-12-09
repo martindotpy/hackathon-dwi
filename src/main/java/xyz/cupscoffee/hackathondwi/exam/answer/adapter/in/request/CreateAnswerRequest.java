@@ -3,6 +3,7 @@ package xyz.cupscoffee.hackathondwi.exam.answer.adapter.in.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import xyz.cupscoffee.hackathondwi.exam.answer.domain.query.payload.CreateAnswer
 @AllArgsConstructor
 public final class CreateAnswerRequest implements CreateAnswerPayload {
     @NotNull(message = "answer.create.request.value.not-null")
-    @Positive(message = "answer.create.request.value.positive")
+    @PositiveOrZero(message = "answer.create.request.id.positive-or-zero")
     @Max(value = 20, message = "answer.create.request.value.max")
     private Integer value;
 

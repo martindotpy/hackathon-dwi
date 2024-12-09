@@ -9,6 +9,10 @@
   xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
   xmlns:c="http://java.sun.com/jstl/core"
 >
+  <f:metadata>
+    <f:viewParam name="semester_id" value="#{questionView.semesterId}" />
+  </f:metadata>
+
   <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,10 +21,6 @@
     <title>#{msg['question.title']}</title>
   </h:head>
   <h:body>
-    <f:metadata>
-      <f:viewParam name="semester_id" value="#{questionView.semesterId}" />
-    </f:metadata>
-
     <ui:include src="/components/organisms/header.xhtml" />
 
     <main class="main-search-table">
@@ -32,95 +32,101 @@
         />
 
         <h1>#{msg['question.header']}</h1>
-      </div>
 
-      <!-- View actions -->
-      <div class="actions">
-        <h:form>
-          <p:inputText
-            id="search"
-            value="#{questionView.searchValue}"
-            placeholder="#{msg['question.action.search.placeholder']}"
-          />
-          <p:selectOneMenu value="#{questionView.criteria}" class="criteria">
-            <f:selectItem itemLabel="Id" itemValue="id" />
-            <f:selectItem
-              itemLabel="#{msg['question.action.search.criteria.name']}"
-              itemValue="name"
+        <!-- View actions -->
+        <div class="actions" style="margin-left: auto">
+          <h:form>
+            <p:commandButton
+              value="#{msg['question.action.create.button']}"
+              icon="pi pi-plus"
+              style="width: 12rem"
+              oncomplete="PF('createDialog').show()"
             />
-          </p:selectOneMenu>
-          <p:commandButton
-            value="#{msg['question.action.search.button']}"
-            actionListener="#{questionView.search}"
-            update="messages search questionTable"
-          />
-          <p:commandButton
-            value="#{msg['question.action.create.button']}"
-            update="questionTable"
-            icon="pi pi-plus"
-            oncomplete="PF('createDialog').show()"
-          />
-        </h:form>
+          </h:form>
+        </div>
       </div>
 
       <!-- Data -->
-      <p:dataTable
-        id="questionTable"
-        var="question"
-        value="#{questionView.questionLazyDataModel}"
-        paginator="true"
-        rows="#{questionView.questions.size}"
-        dynamic="true"
-        lazy="true"
-        currentPageReportTemplate="Página {currentPage} de {totalPages}"
-        paginatorPosition="bottom"
-      >
-        <p:column headerText="Id" style="width: 10%">
-          <h:outputText value="#{question.id}" />
-        </p:column>
-
-        <p:column
-          headerText="#{msg['question.table.column.name']}"
-          style="width: 50%"
+      <h:form style="width: 100%">
+        <p:outputLabel
+          value="#{msg['question.action.students.dropdown.label']}"
         >
-          <h:outputText value="#{question.name}" />
-        </p:column>
-
-        <p:column
-          headerText="#{msg['question.table.column.actions']}"
-          style="width: 40%"
-        >
-          <div class="table-actions">
-            <!-- Question -->
-            <p:link
-              value="#{msg['home.table.action.question']}"
-              outcome="/question.xhtml"
-              class="ui-button ui-widget ui-state-default ui-corner-all action details"
-            >
-              <f:param name="question_id" value="#{question.id}" />
-            </p:link>
-
-            <!-- Update question -->
-            <p:commandButton
-              value="#{msg['question.table.action.update']}"
-              icon="pi pi-pencil"
-              actionListener="#{questionView.prepareUpdate(question)}"
-              class="action update"
-              update=":updateDialog"
-              oncomplete="PF('updateDialog').show()"
+          <p:selectOneMenu
+            id="studentDropdown"
+            value="#{questionView.selectedStudent}"
+            style="width: 100%; margin-top: 0.25rem"
+          >
+            <f:selectItems
+              value="#{questionView.students}"
+              var="student"
+              itemValue="#{student}"
+              itemLabel="#{student.code} #{student.firstName != null ? student.firstName : ''} #{student.lastName != null ? student.lastName : ''}"
             />
-
-            <!-- Delete question -->
-            <p:commandButton
-              value="#{msg['question.table.action.delete']}"
-              icon="pi pi-trash"
-              actionListener="#{questionView.delete(question.id)}"
-              update="questionTable"
-              class="action delete"
+            <p:ajax
+              event="change"
+              listener="#{questionView.loadAnswers}"
+              update="@form"
             />
-          </div>
-        </p:column>
-      </p:dataTable>
+            <f:converter converterId="studentConverter" />
+          </p:selectOneMenu>
+        </p:outputLabel>
+
+        <p:outputLabel value="#{msg['question.action.questions.label']}">
+          <p:dataTable
+            id="questionAnswersTable"
+            value="#{questionView.questionAnswers}"
+            var="questionAnswer"
+            rowKey="#{question.questionId}"
+            style="width: 100%; margin-top: 1rem"
+            expandableRowGroups="true"
+          >
+            <p:column headerText="#{msg['question.table.column.order']}">
+              <h:outputText value="#{questionAnswer.order}" />
+            </p:column>
+
+            <p:column headerText="#{msg['question.table.column.max-value']}">
+              <h:outputText value="#{questionAnswer.maxValue}" />
+            </p:column>
+
+            <p:column headerText="#{msg['question.table.column.value']}">
+              <p:inputText
+                id="answerInput"
+                value="#{questionAnswer.value}"
+                style="width: 100%"
+              />
+            </p:column>
+
+            <p:column headerText="#{msg['question.table.column.actions']}">
+              <div class="table-actions">
+                <p:commandButton
+                  value="#{msg['question.table.action.save']}"
+                  icon="pi pi-save"
+                  update="@form:questionAnswersTable"
+                  process="@this answerInput"
+                  actionListener="#{questionView.saveAnswer(questionAnswer)}"
+                />
+                <!-- Update question -->
+                <p:commandButton
+                  value="#{msg['question.table.action.update']}"
+                  icon="pi pi-pencil"
+                  actionListener="#{questionView.prepareUpdate(questionAnswer)}"
+                  class="action update"
+                  update=":updateDialog"
+                  oncomplete="PF('updateDialog').show()"
+                />
+                <!-- Delete question -->
+                <p:commandButton
+                  value="#{msg['question.table.action.delete']}"
+                  icon="pi pi-trash"
+                  actionListener="#{questionView.delete(questionAnswer.questionId)}"
+                  update="@form"
+                  class="action delete"
+                />
+              </div>
+            </p:column>
+          </p:dataTable>
+        </p:outputLabel>
+      </h:form>
     </main>
 
     <!-- Create question dialog -->
@@ -134,20 +140,29 @@
       draggable="false"
     >
       <h:form>
-        <h:outputLabel value="#{msg['question.dialog.create.name.label']}">
+        <h:outputLabel value="#{msg['question.dialog.create.order.label']}">
           <p:inputText
-            id="createName"
-            value="#{questionView.createQuestionName}"
-            placeholder="#{msg['question.dialog.create.name.placeholder']}"
+            id="createOrder"
+            value="#{questionView.createQuestionOrder}"
+            placeholder="#{msg['question.dialog.create.order.placeholder']}"
             required="true"
-            requiredMessage="#{msg['question.dialog.create.name.required']}"
+            requiredMessage="#{msg['question.dialog.create.order.required']}"
+          />
+        </h:outputLabel>
+        <h:outputLabel value="#{msg['question.dialog.create.max-value.label']}">
+          <p:inputText
+            id="createMaxValue"
+            value="#{questionView.createQuestionMaxValue}"
+            placeholder="#{msg['question.dialog.create.max-value.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['question.dialog.create.max-value.required']}"
           />
         </h:outputLabel>
 
         <p:commandButton
           value="#{msg['question.dialog.create.submit']}"
           actionListener="#{questionView.create}"
-          update="messages questionTable"
+          update="messages"
           oncomplete="if (!args.validationFailed) PF('createDialog').hide()"
         />
       </h:form>
@@ -164,27 +179,22 @@
       draggable="false"
     >
       <h:form>
-        <h:outputLabel value="#{msg['question.dialog.update.name.label']}">
+        <h:outputLabel value="#{msg['question.dialog.update.order.label']}">
           <p:inputText
-            id="updatedName"
-            value="#{questionView.updatedQuestionName}"
-            placeholder="#{msg['question.dialog.update.name.placeholder']}"
+            id="updatedOrder"
+            value="#{questionView.updatedQuestionOrder}"
+            placeholder="#{msg['question.dialog.update.order.placeholder']}"
             required="true"
-            requiredMessage="#{msg['question.dialog.update.name.required']}"
+            requiredMessage="#{msg['question.dialog.update.order.required']}"
           />
         </h:outputLabel>
-        <h:outputLabel value="#{msg['question.dialog.update.first-name.label']}">
+        <h:outputLabel value="#{msg['question.dialog.update.max-value.label']}">
           <p:inputText
-            id="updateFirstName"
-            value="#{questionView.updatedQuestionFirstName}"
-            placeholder="#{msg['question.dialog.update.first-name.placeholder']}"
-          />
-        </h:outputLabel>
-        <h:outputLabel value="#{msg['question.dialog.update.last-name.label']}">
-          <p:inputText
-            id="updateLastName"
-            value="#{questionView.updatedQuestionLastName}"
-            placeholder="#{msg['question.dialog.update.last-name.placeholder']}"
+            id="updateMaxValue"
+            value="#{questionView.updatedQuestionMaxValue}"
+            placeholder="#{msg['question.dialog.update.max-value.placeholder']}"
+            required="true"
+            requiredMessage="#{msg['question.dialog.update.max-value.required']}"
           />
         </h:outputLabel>
 
@@ -192,7 +202,7 @@
           value="#{msg['question.dialog.update.submit']}"
           actionListener="#{questionView.update}"
           oncomplete="if (!args.validationFailed) PF('updateDialog').hide()"
-          update="messages questionTable"
+          update="@all"
         />
       </h:form>
     </p:dialog>

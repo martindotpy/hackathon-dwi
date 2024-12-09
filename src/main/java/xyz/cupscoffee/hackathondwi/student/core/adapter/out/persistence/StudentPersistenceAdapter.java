@@ -99,4 +99,12 @@ public final class StudentPersistenceAdapter implements StudentRepository {
 
         return Result.ok(student.get());
     }
+
+    @Override
+    public List<Student> findAllByCoursesId(Long courseId) {
+        return springStudentRepository.findAllByCoursesId(courseId)
+                .stream()
+                .map(studentMapper::toDomain)
+                .toList();
+    }
 }

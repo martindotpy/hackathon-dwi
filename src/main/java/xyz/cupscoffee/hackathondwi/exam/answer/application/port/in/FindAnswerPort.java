@@ -1,5 +1,7 @@
 package xyz.cupscoffee.hackathondwi.exam.answer.application.port.in;
 
+import java.util.List;
+
 import xyz.cupscoffee.hackathondwi.exam.answer.application.dto.AnswerDto;
 import xyz.cupscoffee.hackathondwi.exam.answer.domain.query.failure.AnswerFailure;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Criteria;
@@ -25,4 +27,13 @@ public interface FindAnswerPort {
      * @return the result of the operation
      */
     Result<AnswerDto, AnswerFailure> matchOne(Criteria criteria);
+
+    /**
+     * Find all answers by exam id.
+     *
+     * @param examId    The exam id.
+     * @param studentId The student id.
+     * @return the list of answers
+     */
+    List<AnswerDto> findAllByExamIdAndStudentId(Long examId, Long studentId);
 }
