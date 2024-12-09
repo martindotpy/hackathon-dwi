@@ -30,10 +30,13 @@ spring:
       minimum-idle: 5
       idle-timeout: 30000
       max-lifetime: 60000
-      auto-commit: false
+      auto-commit: true
 
   jpa:
     show-sql: true
+
+    hibernate:
+      ddl-auto: update
 
   # DevTools
   devtools:
