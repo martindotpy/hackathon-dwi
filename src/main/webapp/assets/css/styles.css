@@ -49,6 +49,35 @@ header {
   color: var(--header-text-color);
 }
 
+.right-header {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.right-header .header-username-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0.5rem;
+  width: 150px;
+}
+
+.right-header .logout {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  width: 150px;
+}
+
+.right-header .logout:hover {
+  background-color: #c82333;
+  border-color: #c82333;
+}
+
 /* Footer */
 footer {
   display: flex;
@@ -169,8 +198,7 @@ footer {
   background-color: #ff3333;
 }
 
-/* Update dialog */
-
+/* Dialogs */
 .dialog form {
   display: flex;
   flex-direction: column;

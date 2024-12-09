@@ -2,11 +2,10 @@ package xyz.cupscoffee.hackathondwi.shared.adapter.in.view;
 
 import java.util.Locale;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.LocaleResolver;
 
-import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,9 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
+@ViewScoped
 @Named
-@SessionScoped
 @RequiredArgsConstructor
 public class LocaleBean {
     private final LocaleResolver localeResolver;

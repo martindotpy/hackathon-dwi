@@ -19,6 +19,7 @@ import xyz.cupscoffee.hackathondwi.shared.adapter.in.util.ObjectMapperShortcuts;
 import xyz.cupscoffee.hackathondwi.shared.adapter.in.view.RestClient;
 import xyz.cupscoffee.hackathondwi.shared.application.response.DetailedFailureResponse;
 import xyz.cupscoffee.hackathondwi.shared.application.response.FailureResponse;
+import xyz.cupscoffee.hackathondwi.user.core.domain.payload.RegisterUserPayload;
 
 @Slf4j
 @ViewScoped
@@ -40,25 +41,35 @@ public class RegisterView {
     private final RestClient restClient;
 
     public void register() {
-        RegisterRequest request = new RegisterRequest(code, name, password);
+        // Register request
+        RegisterUserPayload request = RegisterRequest.builder()
+                .code(code)
+                .name(name)
+                .password(password)
+                .build();
         var response = restClient.post("/auth/register", request, JwtResponse.class);
 
+        // Check response status
         if (response.getStatus() != 200) {
+            // Bad request
             if (response.getStatus() == 400) {
+                log.error("Failed to register user, bad request");
+
                 DetailedFailureResponse failure = (DetailedFailureResponse) ObjectMapperShortcuts
                         .map(response.getBodyAsString(), DetailedFailureResponse.class);
 
                 showFailureMessage(failure);
-
-            } else {
-                FailureResponse failure = (FailureResponse) ObjectMapperShortcuts
-                        .map(response.getBodyAsString(), FailureResponse.class);
-
-                showFailureMessage(failure);
-
-                log.error("Failed to register user: {}",
-                        ansi().fgRed().a(response.getBody()).reset());
+                return;
             }
+
+            // Other cases
+            FailureResponse failure = (FailureResponse) ObjectMapperShortcuts
+                    .map(response.getBodyAsString(), FailureResponse.class);
+
+            showFailureMessage(failure);
+
+            log.error("Failed to register user: {}",
+                    ansi().fgRed().a(response.getBody()).reset());
 
             return;
         }
@@ -67,8 +78,11 @@ public class RegisterView {
 
         // Save JWT in a cookie
         FacesContext facesContext = FacesContext.getCurrentInstance();
+
         HttpServletResponse httpResponse = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+
         Cookie jwtCookie = new Cookie("jwt", jwtResponse.getContent().getJwt());
+
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         httpResponse.addCookie(jwtCookie);
