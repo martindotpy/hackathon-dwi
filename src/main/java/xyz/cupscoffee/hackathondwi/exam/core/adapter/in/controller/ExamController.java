@@ -42,6 +42,7 @@ import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Criteria;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Filter;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.FilterOperator;
 import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.Order;
+import xyz.cupscoffee.hackathondwi.shared.domain.query.criteria.OrderType;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.SimpleValidation;
 import xyz.cupscoffee.hackathondwi.shared.domain.validation.ValidationError;
 import xyz.cupscoffee.hackathondwi.user.core.domain.model.User;
@@ -73,6 +74,7 @@ public final class ExamController {
             @RequestParam(defaultValue = "10") @Parameter(description = "Limit (max 10)") Integer limit,
             @RequestParam(defaultValue = "1") @Parameter(description = "Page (min 1)") Integer page,
             @RequestParam(required = false) @Parameter(description = "Name of the exam") String name,
+            @RequestParam(required = false) @Parameter(description = "Id of the exam") Long id,
             @AuthenticationPrincipal User user) {
         var violations = new CopyOnWriteArrayList<ValidationError>();
 
@@ -104,8 +106,9 @@ public final class ExamController {
                         List.of(
                                 new Filter("course.id", FilterOperator.EQUAL, courseId.toString()),
                                 new Filter("course.semester.user.id", FilterOperator.EQUAL, user.getId().toString()),
-                                new Filter("name", FilterOperator.LIKE, name)),
-                        Order.none(),
+                                new Filter("name", FilterOperator.LIKE, name),
+                                Filter.of("id", FilterOperator.LIKE, id)),
+                        Order.of("id", OrderType.DESC),
                         limit,
                         page));
 
