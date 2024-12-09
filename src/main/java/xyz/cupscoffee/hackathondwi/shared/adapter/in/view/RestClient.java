@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.annotation.SessionScope;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +27,37 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
+@SessionScope
 @RequiredArgsConstructor
-public final class RestClient {
+public class RestClient {
     @Value("${springdoc.api-docs.server-url}/api/${spring.api.version}")
     private String baseUrl;
     private String jwt;
     private final HttpServletRequest servletRequest;
     private final RestTemplate restTemplate;
+    private final ClientHttpRequestInterceptor jwtInterceptor = new ClientHttpRequestInterceptor() {
+        @Override
+        @SuppressWarnings("null")
+        public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+                throws IOException {
+            if (jwt != null) {
+                request.getHeaders().add("Authorization", "Bearer " + jwt);
+                log.debug("JWT added to request headers");
+            }
+
+            return execution.execute(request, body);
+        }
+    };
+
+    @PostConstruct
+    public void init() {
+        addJwtInterceptor();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        restTemplate.getInterceptors().remove(jwtInterceptor);
+    }
 
     /**
      * Load JWT from cookies.
@@ -48,26 +75,13 @@ public final class RestClient {
                 }
             }
         }
-        addJwtInterceptor();
     }
 
     /**
      * Add JWT interceptor to RestTemplate.
      */
     private void addJwtInterceptor() {
-        restTemplate.getInterceptors().add(new ClientHttpRequestInterceptor() {
-            @Override
-            @SuppressWarnings("null")
-            public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-                    throws IOException {
-                if (jwt != null) {
-                    request.getHeaders().add("Authorization", "Bearer " + jwt);
-                    log.debug("JWT added to request headers");
-                }
-
-                return execution.execute(request, body);
-            }
-        });
+        restTemplate.getInterceptors().add(jwtInterceptor);
     }
 
     /**
@@ -81,6 +95,8 @@ public final class RestClient {
     public <T> RestResponse<?> get(String path, Class<T> responseType) {
         try {
             loadJwtFromCookies(servletRequest);
+
+            log.info("Making GET request to `{}`", ansi().fgYellow().a(baseUrl + path).reset());
 
             return RestResponse.of(200, restTemplate.getForObject(baseUrl + path, responseType));
         } catch (RestClientException e) {
@@ -102,6 +118,8 @@ public final class RestClient {
     public <T> RestResponse<? extends Object> post(String path, Object request, Class<T> responseType) {
         try {
             loadJwtFromCookies(servletRequest);
+
+            log.info("Making POST request to `{}`", ansi().fgYellow().a(baseUrl + path).reset());
 
             return RestResponse.of(200, restTemplate.postForObject(baseUrl + path, request, responseType));
         } catch (HttpClientErrorException e) {
@@ -131,6 +149,8 @@ public final class RestClient {
     public <T> RestResponse<?> put(String path, Object request, Class<T> responseType) {
         loadJwtFromCookies(servletRequest);
 
+        log.info("Making PUT request to `{}`", ansi().fgYellow().a(baseUrl + path).reset());
+
         restTemplate.put(baseUrl + path, request);
 
         return RestResponse.of(200);
@@ -143,6 +163,8 @@ public final class RestClient {
      */
     public RestResponse<?> delete(String path) {
         loadJwtFromCookies(servletRequest);
+
+        log.info("Making DELETE request to `{}`", ansi().fgYellow().a(baseUrl + path).reset());
 
         restTemplate.delete(baseUrl + path);
 

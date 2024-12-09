@@ -14,30 +14,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <ui:include src="/components/atoms/font.xhtml" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
-    <title>Home</title>
+    <title>#{msg['course.title']}</title>
   </h:head>
   <h:body>
     <ui:include src="/components/organisms/header.xhtml" />
 
     <main class="main-search-table">
-      <h1>#{msg['home.header']}</h1>
+      <h1>#{msg['course.header']}</h1>
 
       <!-- View actions -->
       <div class="actions">
         <h:form>
           <p:inputText
             id="search"
-            value="#{homeView.searchName}"
-            placeholder="#{msg['home.action.search.placeholder']}"
+            value="#{courseView.searchName}"
+            placeholder="#{msg['course.action.search.placeholder']}"
           />
           <p:commandButton
-            value="#{msg['home.action.search.button']}"
-            actionListener="#{homeView.search}"
-            update="semesterTable"
+            value="#{msg['course.action.search.button']}"
+            actionListener="#{courseView.search}"
+            update="courseTable"
           />
           <p:commandButton
-            value="#{msg['home.action.create.button']}"
-            update="semesterTable"
+            value="#{msg['course.action.create.button']}"
+            update="courseTable"
             icon="pi pi-plus"
             oncomplete="PF('createDialog').show()"
           />
@@ -46,57 +46,66 @@
 
       <!-- Data -->
       <p:dataTable
-        id="semesterTable"
-        var="semester"
-        value="#{homeView.semesterLazyDataModel}"
+        id="courseTable"
+        var="course"
+        value="#{courseView.courseLazyDataModel}"
         paginator="true"
-        rows="#{homeView.semesters.size}"
+        rows="#{courseView.courses.size}"
         dynamic="true"
         lazy="true"
         currentPageReportTemplate="Página {currentPage} de {totalPages}"
         paginatorPosition="bottom"
       >
         <p:column headerText="Id" style="width: 10%">
-          <h:outputText value="#{semester.id}" />
+          <h:outputText value="#{course.id}" />
         </p:column>
 
         <p:column
-          headerText="#{msg['home.table.column.name']}"
+          headerText="#{msg['course.table.column.name']}"
           style="width: 45%"
         >
-          <h:outputText value="#{semester.name}" />
+          <h:outputText value="#{course.name}" />
         </p:column>
 
         <p:column
-          headerText="#{msg['home.table.column.actions']}"
+          headerText="#{msg['course.table.column.actions']}"
           style="width: 55%"
         >
           <div class="table-actions">
-            <!-- Course -->
+            <!-- Exam -->
             <p:link
-              value="#{msg['home.table.action.course']}"
-              outcome="/course.xhtml"
+              value="#{msg['course.table.action.exam']}"
+              outcome="/exam.xhtml"
               class="ui-button ui-widget ui-state-default ui-corner-all action details"
             >
-              <f:param name="semester_id" value="#{semester.id}" />
+              <f:param name="course_id" value="#{course.id}" />
             </p:link>
 
-            <!-- Update semester -->
+            <!-- Student -->
+            <p:link
+              value="#{msg['course.table.action.student']}"
+              outcome="/student.xhtml"
+              class="ui-button ui-widget ui-state-default ui-corner-all action details"
+            >
+              <f:param name="course_id" value="#{course.id}" />
+            </p:link>
+
+            <!-- Update course -->
             <p:commandButton
-              value="#{msg['home.table.action.update']}"
+              value="#{msg['course.table.action.update']}"
               icon="pi pi-pencil"
-              actionListener="#{homeView.prepareUpdate(semester)}"
+              actionListener="#{courseView.prepareUpdate(course)}"
               class="action update"
               update=":updateDialog"
               oncomplete="PF('updateDialog').show()"
             />
 
-            <!-- Delete semester -->
+            <!-- Delete course -->
             <p:commandButton
-              value="#{msg['home.table.action.delete']}"
+              value="#{msg['course.table.action.delete']}"
               icon="pi pi-trash"
-              actionListener="#{homeView.delete(semester.id)}"
-              update="semesterTable"
+              actionListener="#{courseView.delete(course.id)}"
+              update="courseTable"
               class="action delete"
             />
           </div>
@@ -104,56 +113,56 @@
       </p:dataTable>
     </main>
 
-    <!-- Create semester dialog -->
+    <!-- Create course dialog -->
     <p:dialog
       id="createDialog"
       class="dialog"
-      header="#{msg['home.dialog.create.title']}"
+      header="#{msg['course.dialog.create.title']}"
       widgetVar="createDialog"
       modal="true"
       resizable="false"
       draggable="false"
     >
       <h:form>
-        <h:outputLabel value="#{msg['home.dialog.create.name.label']}">
+        <h:outputLabel value="#{msg['course.dialog.create.name.label']}">
           <p:inputText
             id="createName"
-            value="#{homeView.createSemesterName}"
-            placeholder="#{msg['home.dialog.create.name.placeholder']}"
+            value="#{courseView.createCourseName}"
+            placeholder="#{msg['course.dialog.create.name.placeholder']}"
           />
         </h:outputLabel>
 
         <p:commandButton
-          value="#{msg['home.dialog.create.submit']}"
-          actionListener="#{homeView.create}"
-          update="semesterTable"
+          value="#{msg['course.dialog.create.submit']}"
+          actionListener="#{courseView.create}"
+          update="courseTable"
           oncomplete="PF('createDialog').hide()"
         />
       </h:form>
     </p:dialog>
 
-    <!-- Update semester dialog -->
+    <!-- Update course dialog -->
     <p:dialog
       id="updateDialog"
       class="dialog"
-      header="#{msg['home.dialog.update.title']}"
+      header="#{msg['course.dialog.update.title']}"
       widgetVar="updateDialog"
       modal="true"
       resizable="false"
       draggable="false"
     >
       <h:form>
-        <h:outputLabel value="#{msg['home.dialog.update.name.label']}">
+        <h:outputLabel value="#{msg['course.dialog.update.name.label']}">
           <p:inputText
             id="updatedName"
-            value="#{homeView.updatedSemesterName}"
-            placeholder="#{msg['home.dialog.update.name.placeholder']}"
+            value="#{courseView.updatedCourseName}"
+            placeholder="#{msg['course.dialog.update.name.placeholder']}"
           />
         </h:outputLabel>
         <p:commandButton
-          value="#{msg['home.dialog.update.submit']}"
-          actionListener="#{homeView.update}"
-          update="semesterTable"
+          value="#{msg['course.dialog.update.submit']}"
+          actionListener="#{courseView.update}"
+          update="courseTable"
           oncomplete="PF('updateDialog').hide()"
         />
       </h:form>

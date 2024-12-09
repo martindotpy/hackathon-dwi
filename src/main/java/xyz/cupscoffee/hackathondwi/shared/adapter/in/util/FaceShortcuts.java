@@ -74,4 +74,16 @@ public final class FaceShortcuts {
 
         return new FacesMessage(severity, message, null);
     }
+
+    public static String getQueryParam(String name) {
+        return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(name);
+    }
+
+    public static void redirect(String url) {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+        } catch (Exception e) {
+            log.error("Error redirecting to {}", url, e);
+        }
+    }
 }
