@@ -194,7 +194,11 @@ public class RestClient {
 
         log.info("Making DELETE request to `{}`", ansi().fgYellow().a(baseUrl + path).reset());
 
-        restTemplate.delete(baseUrl + path);
+        try {
+            restTemplate.delete(baseUrl + path);
+        } catch (RestClientException e) {
+            return RestResponse.of(500);
+        }
 
         return RestResponse.of(200);
     }

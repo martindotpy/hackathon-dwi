@@ -176,7 +176,10 @@ public final class ExamView {
 
         if (response.getStatus() == 200) {
             search();
+            return;
         }
+
+        FaceShortcuts.showFailureMessage("element.delete.error", "Failed to delete the element");
     }
 
     // Lazy data model
