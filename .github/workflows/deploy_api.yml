@@ -10,7 +10,16 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Kill the previous api process
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.14.0
+        with:
+          java-distribution: "temurin"
+          java-version: "21"
+
+      - name: Kill the previous process if exists
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -19,36 +28,27 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             sudo fuser -k 8082/tcp || echo "No process running on port 8082"
-            if [ -d "/home/${{ secrets.USER }}/hackathon-dwi" ]; then
-                cd /home/${{ secrets.USER }}/hackathon-dwi
-                docker compose down
-            else
-                echo "Directory /home/${{ secrets.USER }}/hackathon-dwi does not exist"
-            fi
 
-            sleep 5 && if [ -f "./remove-images-containers.sh" ]; then
-                chmod -R 755 ./remove-images-containers.sh
-                ./remove-images-containers.sh
-            else
-                echo "File ./remove-images-containers.sh does not exist"
-            fi
+      - name: Install dependencies and build
+        run: mvn install -DskipTests
 
-            rm -rf /home/${{ secrets.USER }}/hackathon-dwi
+      - name: Create the folder hackathon-dwi
+        run: mkdir hackathon-dwi
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Move war to hackathon-dwi
+        run: mv target/*.war hackathon-dwi
 
-      - name: Copy the code to the server
+      - name: Copy the hackathon-dwi to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: .
-          target: /home/${{ secrets.USER }}/hackathon-dwi
+          source: hackathon-dwi
+          target: /home/ubuntu
 
-      - name: Run the api
+      - name: Update the war file
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -56,11 +56,16 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/${{ secrets.USER }}/hackathon-dwi
-            nohup bash -c 'docker build --network host \
-                -t hackathon-dwi-api:0.0.1-SNAPSHOT . && \
-                docker run --network host \
-                -v /var/run/docker.sock:/var/run/docker.sock \
-                --rm --name hackathon-dwi-api \
-                -t hackathon-dwi-api:0.0.1-SNAPSHOT' \
+            cd /home/ubuntu/hackathon-dwi
+            sudo nohup java -jar *.war \
+                --spring.profiles.active=prod \
+                --spring.datasource.url=${{ secrets.DB_URL }} \
+                --spring.datasource.username=${{ secrets.DB_USERNAME }} \
+                --spring.datasource.password=${{ secrets.DB_PASSWORD }} \
+                --server.ssl.key-store=${{ secrets.SSL_KEYSTORE }} \
+                --server.ssl.key-store-type=${{ secrets.SSL_TYPE }} \
+                --server.ssl.key-alias=${{ secrets.SSL_ALIAS }} \
+                --server.port=8082 \
+                --server.ssl.key-password=${{ secrets.SSL_PASSWORD }} \
+                --server.ssl.key-store-password=${{ secrets.SSL_PASSWORD }} \
                 > output.log 2>&1 &

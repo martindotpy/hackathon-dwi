@@ -1,6 +1,8 @@
 # Server
 server:
   host: hackathon-dwi.cupscoffee.xyz
+  ssl:
+    enabled: true
 
 # Logger
 logging:
@@ -15,8 +17,8 @@ logging:
     path: logs
     name: hackathon-dwi.log
 
-# Hikari
 spring:
+  # Hikari
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -32,6 +34,13 @@ spring:
 
   jpa:
     show-sql: true
+
+  # DevTools
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
 
 # Swagger
 springdoc:
