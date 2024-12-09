@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import xyz.cupscoffee.hackathondwi.exam.answer.adapter.in.request.CreateAnswerRequest;
 import xyz.cupscoffee.hackathondwi.exam.answer.adapter.in.request.UpdateAnswerRequest;
+import xyz.cupscoffee.hackathondwi.exam.answer.adapter.in.response.AnswerContentResponse;
 import xyz.cupscoffee.hackathondwi.exam.answer.adapter.in.response.AnswersContentResponse;
 import xyz.cupscoffee.hackathondwi.exam.answer.application.dto.AnswerDto;
 import xyz.cupscoffee.hackathondwi.exam.answer.domain.query.payload.CreateAnswerPayload;
@@ -307,7 +308,7 @@ public final class QuestionView {
                 .studentId(selectedStudent.getId())
                 .build();
 
-        var response = restClient.post("/answer", request, AnswersContentResponse.class);
+        var response = restClient.post("/answer", request, AnswerContentResponse.class);
 
         if (response.getStatus() == 200) {
             questionAnswer.setAnswerId(((AnswerDto) response.getBody()).getId());
@@ -336,5 +337,13 @@ public final class QuestionView {
         private Integer value;
         private Long questionId;
         private Long answerId;
+    }
+
+    // Redirect to stats
+    public void stats() {
+        FaceShortcuts.redirect("/stats.xhtml?"
+                + "exam_id=" + examId + "&"
+                + "course_id=" + courseId + "&"
+                + "semester_id=" + semesterId);
     }
 }

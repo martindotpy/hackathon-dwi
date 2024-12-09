@@ -9,6 +9,9 @@
   xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
   xmlns:c="http://java.sun.com/jstl/core"
 >
+  <f:metadata>
+    <f:viewParam name="semester_id" value="#{examView.semesterId}" />
+  </f:metadata>
   <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,10 +20,6 @@
     <title>#{msg['exam.title']}</title>
   </h:head>
   <h:body>
-    <f:metadata>
-      <f:viewParam name="semester_id" value="#{examView.semesterId}" />
-    </f:metadata>
-
     <ui:include src="/components/organisms/header.xhtml" />
 
     <main class="main-search-table">

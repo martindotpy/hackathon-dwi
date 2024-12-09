@@ -34,15 +34,30 @@
         <h1>#{msg['question.header']}</h1>
 
         <!-- View actions -->
-        <div class="actions" style="margin-left: auto">
+        <div
+          class="actions"
+          style="
+            margin-left: auto;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+          "
+        >
           <h:form>
             <p:commandButton
               value="#{msg['question.action.create.button']}"
               icon="pi pi-plus"
-              style="width: 12rem"
+              style="width: 10.25rem"
               oncomplete="PF('createDialog').show()"
             />
           </h:form>
+          <p:commandButton
+          value="#{msg['question.action.stats.button']}"
+            icon="pi pi-chart-bar"
+            action="#{questionView.stats}"
+            style="width: 10.25rem"
+          />
         </div>
       </div>
 
