@@ -24,11 +24,9 @@ public final class FaceShortcuts {
         StringBuilder sb = new StringBuilder();
 
         for (String detail : failureResponse.getDetails()) {
-            String detailMessage = detail.split(": ")[1];
+            sb.append("* ").append(detail);
 
-            sb.append("* ").append(detailMessage);
-
-            if (!detailMessage.endsWith("."))
+            if (!detail.endsWith("."))
                 sb.append(". ");
 
             sb.append("\n");
