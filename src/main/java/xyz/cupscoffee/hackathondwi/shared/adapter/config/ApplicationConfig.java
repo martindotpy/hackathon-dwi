@@ -50,6 +50,10 @@ public class ApplicationConfig {
     RestTemplate restTemplate(ObjectMapper objectMapper) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(objectMapper));
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().add("Content-Type", "application/json");
+            return execution.execute(request, body);
+        });
 
         return restTemplate;
     }
